@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# BIOTOX by MedReg — Expert Toxicology Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-fidelity single-page responsive React + TypeScript application built on top of Vite. It showcases MedReg's expert toxicology services with vibrant layout transitions, full responsive styling, dark/light mode persistence, and zero-FOUC theme state configurations.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React + TypeScript + Vite**: Fast HMR and lightweight production bundle.
+- **Zero-FOUC Theme Management**: Smooth light/dark theme toggles utilizing media listeners and FOUC prevention logic.
+- **Responsive Layout System**: Perfect styling down to 320px small mobile screen sizes up to ultrawide desktops.
+- **IntersectionObserver Animations**: Lightweight viewport triggers to transition elements into view dynamically.
+- **Clean SVG Icon Modules**: Utilizes componentized `@tabler/icons-react` icons.
 
-## React Compiler
+## 🛠️ Tech Stack & Scripts
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: React 19, TypeScript
+- **Bundler**: Vite 8
+- **Styling**: Pure Vanilla CSS (`src/index.css`)
+- **Icons**: `@tabler/icons-react`
 
-## Expanding the ESLint configuration
+### Available Scripts
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Run development server: `npm run dev`
+- Compile production bundle: `npm run build`
+- Preview build: `npm run preview`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ☁️ Deploying to Vercel
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The repository has been configured to build and deploy directly on Vercel:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. Go to your **[Vercel Dashboard](https://vercel.com)**.
+2. Click **Add New** > **Project**.
+3. Import this repository: `jigarsolanki0212/biotox`.
+4. Vercel will auto-detect the framework as **Vite**:
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+5. Click **Deploy**.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The project compiles with zero compilation errors, making it ready to be served immediately.
