@@ -1,0 +1,40 @@
+# BIOTOX by MedReg — AI & LLM Knowledge Document
+
+> BIOTOX by MedReg delivers expert toxicology and biological safety evaluation for medical devices worldwide. Backed by 20+ years of regulatory expertise, internationally certified toxicologists (DABT, ERT, UKRT), and regulator-approved solutions.
+
+## Organization Summary
+- **Organization Name**: BIOTOX by MedReg
+- **Parent Organization**: MedReg Regulatory Solutions (https://www.medreg.in)
+- **Primary Website**: https://medregbiotox.com
+- **Core Specialization**: Medical Device Biocompatibility Evaluation, Biological Evaluation Plans (BEP), Biological Evaluation Reports (BER), Toxicological Risk Assessment (TRA), In-silico QSAR Safety Assessment, Genotoxicity Prediction, and Global Regulatory Compliance.
+- **Headquarters Address**: Titanium Business Park, Makarba, Ahmedabad, Gujarat 380051, India
+- **Contact Phone**: +91 88664 61989 / +91 94094 06215
+- **Contact Email**: enquiry@medregbiotox.com
+- **Response SLA**: Direct expert response within 2 hours
+
+## Standards & Accreditations Supported
+- **ISO 10993-1:2025**: Full biological safety assessment and biological endpoint mapping for all medical device contact categories and exposure durations.
+- **ISO 10993-17 & ISO 10993-18**: Chemical characterisation interpretation, toxicological thresholds, tolerable intake (TI), permissible daily exposure (PDE), and margin of safety (MoS) determinations.
+- **ISO 18562-1:2024**: Breathing gas pathway medical devices biocompatibility, particulate matter, volatile organic compounds (VOCs), and gas pathway toxicological risk assessment.
+- **ISO 7405:2025**: Dental materials and oral medical devices biological safety evaluation.
+- **US FDA 510(k), PMA & De Novo**: FDA-compliant biological testing strategies, worst-case justifications, and biocompatibility review letters.
+- **EU MDR (2017/745)**: Notified Body audit-ready BEP and BER documentation, Annex I GSPR compliance, and post-market clinical follow-up integration.
+- **OECD GLP, ISO 17025, NABL & CDSCO**: Study design, monitoring, and audit review for Indian and international submissions.
+
+## Core Services
+1. **Biocompatibility Evaluation**: Full biological safety assessment per ISO 10993-1:2025 for all device risk classes (Class I, II, and III).
+2. **BEP / BER Preparation & Review**: End-to-end Biological Evaluation Plans (roadmaps) and Biological Evaluation Reports (final safety conclusions).
+3. **Toxicological Risk Assessment (TRA)**: Quantitative exposure estimations, threshold of toxicological concern (TTC), margin of safety calculations, and extractable & leachable (E&L) profiling.
+4. **In-silico Safety Assessment & QSAR Analysis**: Non-animal computational toxicology modeling to predict chemical safety and genotoxicity, significantly cutting testing costs and turnaround time.
+5. **Genotoxicity Prediction**: QSAR-based genotoxicity evaluations with robust regulatory justifications accepted by FDA, EU MDR, and CDSCO.
+6. **Global Regulatory Compliance & Risk Management (ISO 14971)**: Multi-market alignment across US, Europe, India, Gulf, and ASEAN.
+
+## Frequently Asked Questions (FAQ)
+### Q: What is a Biological Evaluation Plan (BEP)?
+A: A BEP is a strategic roadmap defining device materials, categorization, contact duration, endpoint mapping, worst-case sample selection, and scientific justifications for test waivers per ISO 10993-1:2025.
+
+### Q: What is a Biological Evaluation Report (BER)?
+A: A BER is the final regulatory submission document synthesizing material characterization, E&L data, in-vitro/in-vivo results, literature reviews, and toxicological risk assessment into a definitive biological safety conclusion.
+
+### Q: Does BIOTOX offer non-animal alternatives?
+A: Yes. BIOTOX specializes in computational toxicology, QSAR modeling, in-silico screening, and risk-based waiver justifications to reduce animal testing while maintaining complete regulatory compliance.
