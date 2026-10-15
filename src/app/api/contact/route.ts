@@ -1,11 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { ENQUIRY_LIMITS, validateEnquiry } from '@/lib/enquiry';
+import { buildAutoReply } from '@/lib/autoreply-email';
 
 /**
  * Enquiry delivery. Configure in Vercel → Settings → Environment Variables (see .env.example):
  *  - RESEND_API_KEY + LEAD_FROM_EMAIL   email each enquiry through Resend
  *  - LEAD_TO_EMAIL                      recipient(s), comma-separated (default enquiry@medregbiotox.com)
  *  - LEAD_WEBHOOK_URL                   optional JSON POST of every enquiry (Google Sheets, CRM, Slack…)
+ *  - AUTOREPLY_FROM                     e.g. "BIOTOX by MedReg <enquiry@medregbiotox.com>": send the visitor a
+ *                                       confirmation through Resend (needs RESEND_API_KEY and the domain verified)
  * With nothing configured, production answers 503 and the form falls back to the visitor's email app,
  * so an enquiry is never shown as sent when it was not.
  */
@@ -69,6 +72,31 @@ async function sendWebhook(subject: string, fields: [string, string][]) {
   const reply = await res.text();
   if (/"ok"\s*:\s*false/.test(reply)) throw new Error(`Webhook rejected the enquiry: ${reply.slice(0, 200)}`);
   return true;
+}
+
+/** Confirmation to the visitor. Only after their enquiry really reached us, so it never promises a reply in vain. */
+async function sendAutoReply(to: string, fullName: string, serviceRequired: string) {
+  const key = process.env.RESEND_API_KEY;
+  const from = process.env.AUTOREPLY_FROM;
+  if (!key || !from) return;
+  const { subject, html, text } = buildAutoReply({ fullName, serviceRequired });
+  const replyTo = (process.env.LEAD_TO_EMAIL || 'enquiry@medregbiotox.com').split(',')[0].trim();
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(10000),
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: replyTo,
+      subject,
+      html,
+      text,
+      // RFC 3834: marks it as automatic so out-of-office replies don't bounce back and forth.
+      headers: { 'Auto-Submitted': 'auto-generated' },
+    }),
+  });
+  if (!res.ok) throw new Error(`Auto-reply: Resend responded ${res.status}`);
 }
 
 const MAX_BODY_BYTES = 16 * 1024;
@@ -151,6 +179,11 @@ export async function POST(request: Request) {
         { success: false, message: 'We could not send your enquiry right now. Please email or call us directly.' },
         { status: 503 }
       );
+    }
+
+    if (delivered) {
+      // Runs after the response is sent, so the visitor never waits on it; a failure only gets logged.
+      after(() => sendAutoReply(emailAddress, fullName, serviceRequired).catch((e) => console.error('Auto-reply failed:', e)));
     }
 
     return NextResponse.json({
