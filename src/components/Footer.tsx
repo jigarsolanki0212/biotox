@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link href="/" aria-label="BIOTOX by MedReg home">
-              <Image src="/images/logo-full.png" alt="BIOTOX by MedReg" width={150} height={55} className="logo-img" />
+              <Image src="/images/logo-full.webp" alt="BIOTOX by MedReg" width={150} height={55} className="logo-img" />
             </Link>
             <p>Expert toxicology solutions for safe, compliant, successful products. Science · Safety · Compliance.</p>
           </div>

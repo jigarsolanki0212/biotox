@@ -71,6 +71,8 @@ body{
   transition:background-color .4s ease, color .4s ease;
   overflow-x:hidden;
 }
+@supports (overflow:clip){ body{overflow-x:clip;} }
+#mainContent{overflow-x:clip;}
 h1,h2,h3,h4,h5{font-family:var(--font-head); color:var(--text); line-height:1.14; letter-spacing:-.022em; font-weight:700;}
 p{text-wrap:pretty;}
 h1,h2{text-wrap:balance;}
@@ -304,10 +306,10 @@ html.dark .aurora span{opacity:.28;}
 .hero-kicker b{background:var(--grad); color:#fff; padding:4px 10px; border-radius:999px; font-size:11.5px; font-family:var(--font-head); letter-spacing:.04em;}
 .hero h1{font-size:clamp(40px,5.6vw,74px); font-weight:800; letter-spacing:-.035em; line-height:1.04; margin-bottom:24px;}
 .hero h1 .line{display:block; overflow:hidden; padding-bottom:.06em;}
-.hero h1 .line > span{display:inline-block; transform:translateY(105%); animation:rise 1.1s var(--ease) forwards; animation-delay:calc(var(--i) * 110ms + 150ms);}
+.hero h1 .line > span{display:inline-block; transform:translateY(105%); animation:rise 1.1s var(--ease) forwards; animation-delay:calc(var(--i) * 90ms + 40ms);}
 @keyframes rise{to{transform:translateY(0);}}
 .hero .lead{font-size:clamp(16.5px,1.4vw,19px); color:var(--text-muted); max-width:560px; margin-bottom:30px;}
-.fade-up{opacity:0; transform:translateY(22px); animation:fadeUp 1s var(--ease) forwards; animation-delay:var(--d,0ms);}
+.fade-up{opacity:0; transform:translateY(18px); animation:fadeUp .8s var(--ease) forwards; animation-delay:var(--d,0ms);}
 @keyframes fadeUp{to{opacity:1; transform:none;}}
 .hero-cta{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:38px;}
 .hero-trust{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
@@ -665,7 +667,7 @@ html.dark .form-note.error{color:#F87171;}
 .hp-field{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
 
 /* ---------- Footer ---------- */
-.site-footer{position:relative; background:#050B1A; color:rgba(255,255,255,.7); padding:90px 0 30px; overflow:hidden; isolation:isolate;}
+.site-footer{content-visibility:auto; contain-intrinsic-size:auto 900px; position:relative; background:#050B1A; color:rgba(255,255,255,.7); padding:90px 0 30px; overflow:hidden; isolation:isolate;}
 .site-footer::before{content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(700px 300px at 0 0,rgba(37,99,235,.18),transparent 60%),radial-gradient(600px 300px at 100% 100%,rgba(20,184,166,.15),transparent 60%);}
 .footer-top{display:flex; justify-content:space-between; align-items:center; gap:30px; flex-wrap:wrap; padding-bottom:50px; margin-bottom:50px; border-bottom:1px solid rgba(255,255,255,.08);}
 .footer-top h2{color:#fff; font-size:clamp(26px,3.4vw,42px); max-width:640px;}
@@ -722,6 +724,15 @@ html.js [data-reveal="blur"]{filter:blur(12px); transform:translateY(20px);}
 html.js [data-reveal="clip"]{clip-path:inset(0 0 100% 0 round 28px); opacity:1; transition:clip-path 1.3s var(--ease);}
 html.js [data-reveal].in{opacity:1; transform:none; filter:none;}
 html.js [data-reveal="clip"].in{clip-path:inset(0 0 0 0 round 28px);}
+
+/* Photo fade-in on load, over a soft brand-tinted placeholder */
+html.js img.fade-img{opacity:0; transition:opacity .7s var(--ease);}
+html.js img.fade-img.loaded{opacity:1;}
+.card-img-wrap, .bento-item.photo, .device-tile, .hv-frame, .split-media .main-img, .split-media .sub-img, .sd-overview .img, .mega-feature{
+  background-color:#1d3f7a;
+  background-image:linear-gradient(120deg,#1d3f7a 0%,#11635f 100%);
+}
+.page-hero .bg img.fade-img.loaded{opacity:.5;}
 
 /* Page transition */
 .page-enter{animation:pageIn .7s var(--ease) both;}
@@ -786,8 +797,35 @@ html.js [data-reveal="clip"].in{clip-path:inset(0 0 0 0 round 28px);}
   .mini-stats strong{font-size:22px;}
 }
 
+@media (max-width:480px){
+  .hero-cta{flex-direction:column; align-items:stretch;}
+  .hero-cta .btn, .cta-band .actions .btn, .footer-top .btn{width:100%;}
+  .cta-band .actions, .footer-top > div{width:100%; flex-direction:column;}
+  .hero-kicker{font-size:12px;}
+  .floating-actions{right:14px; bottom:14px;}
+  .fab{width:50px; height:50px;}
+}
+
+/* Phones & tablets: keep motion, drop the GPU-heavy extras */
+@media (max-width:980px), (hover:none){
+  .aurora span{animation:none; filter:blur(48px);}
+  .hv-frame img, .page-hero .bg img{animation:none; transform:none;}
+  .hv-main, .hv-side{animation:fadeUp 1s var(--ease) .2s both;}
+  .hv-badge{animation:fadeUp .9s var(--ease) .5s both; backdrop-filter:none; background:var(--card);}
+  .split-media .exp-badge{animation:none;}
+  .hv-emblem::before, .hv-emblem::after{animation:none;}
+  .btn-ghost, .btn-glass, .page-hero .chip, .device-tile .tag, .device-tile .icon-box, .bento-item.photo .icon-box, .card-img-wrap .tag, .service-num{backdrop-filter:none;}
+  .site-header.scrolled .bar{backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);}
+  .card:hover, .feature:hover, .bento-item:hover{transform:none;}
+  .card::before{display:none;}
+  .cta-band .ring{animation:none;}
+  html.js [data-reveal="left"], html.js [data-reveal="right"]{transform:translateY(30px);}
+  .fab-whatsapp::before{animation-iteration-count:3;}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
   html.js [data-reveal]{opacity:1; transform:none; filter:none; clip-path:none;}
+  html.js img.fade-img{opacity:1;}
   .hero h1 .line > span{transform:none;}
 }

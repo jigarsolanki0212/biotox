@@ -125,6 +125,9 @@ export default function RootLayout({
             `,
           }}
         />
+        <link rel="preconnect" href="https://images.pexels.com" crossOrigin="" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://images.pexels.com" />
         <JsonLd schema={orgSchema} />
         <JsonLd schema={websiteSchema} />
       </head>

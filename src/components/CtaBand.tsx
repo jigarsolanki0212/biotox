@@ -16,7 +16,7 @@ export default function CtaBand({
     <section className="section tight">
       <div className="container">
         <div className="cta-band" data-reveal="zoom">
-          <Image className="bg" src="https://images.pexels.com/photos/8828607/pexels-photo-8828607.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" fill sizes="100vw" aria-hidden="true" />
+          <Image className="bg" src="https://images.pexels.com/photos/8828607/pexels-photo-8828607.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="" fill sizes="100vw" quality={55} aria-hidden="true" />
           <span className="ring" aria-hidden="true" />
           <div>
             <h2>{title}</h2>

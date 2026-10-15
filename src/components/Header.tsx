@@ -29,16 +29,36 @@ export default function Header() {
   const lastY = useRef(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    // One measurement per animation frame; hide only after a deliberate scroll down, show on any scroll up.
+    let ticking = false;
+    let down = 0;
+    let up = 0;
+    const update = () => {
+      ticking = false;
       const y = window.scrollY;
-      setIsScrolled(y > 20);
-      setHidden(y > 500 && y > lastY.current + 4);
-      if (y < lastY.current - 4 || y < 500) setHidden(false);
+      const dy = y - lastY.current;
       lastY.current = y;
+      setIsScrolled(y > 20);
+      if (dy > 0) {
+        down += dy;
+        up = 0;
+      } else if (dy < 0) {
+        up -= dy;
+        down = 0;
+      }
+      if (y < 400 || up > 20) setHidden(false);
+      else if (down > 60) setHidden(true);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    lastY.current = window.scrollY;
+    update();
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
@@ -60,7 +80,7 @@ export default function Header() {
       >
         <div className="bar">
           <Link href="/" className="logo" aria-label="BIOTOX by MedReg home">
-            <Image src="/images/logo-full.png" alt="BIOTOX by MedReg" width={158} height={57} preload className="logo-img" id="headerLogo" />
+            <Image src="/images/logo-full.webp" alt="BIOTOX by MedReg" width={158} height={57} preload className="logo-img" id="headerLogo" />
           </Link>
 
           <nav className="main-nav" aria-label="Main navigation">

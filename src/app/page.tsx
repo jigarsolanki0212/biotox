@@ -67,10 +67,10 @@ export default function HomePage() {
               <span className="line"><span style={{ ['--i' as string]: 1 }}>Ensuring Safety.</span></span>
               <span className="line"><span style={{ ['--i' as string]: 2 }}>Enabling Compliance.</span></span>
             </h1>
-            <p className="lead fade-up" style={{ ['--d' as string]: '550ms' }}>
+            <p className="lead fade-up" style={{ ['--d' as string]: '280ms' }}>
               Smarter toxicology for better regulatory decisions — delivering comprehensive biological safety evaluation for medical devices worldwide, backed by 20+ years of expertise, global recognition, and regulator-compliance solutions.
             </p>
-            <div className="hero-cta fade-up" style={{ ['--d' as string]: '680ms' }}>
+            <div className="hero-cta fade-up" style={{ ['--d' as string]: '380ms' }}>
               <Link href="/contact" className="btn btn-primary">
                 Get in Touch <Icon name="arrow" />
               </Link>
@@ -78,7 +78,7 @@ export default function HomePage() {
                 Explore Services
               </Link>
             </div>
-            <div className="hero-trust fade-up" style={{ ['--d' as string]: '800ms' }}>
+            <div className="hero-trust fade-up" style={{ ['--d' as string]: '480ms' }}>
               <div className="avatars" aria-hidden="true">
                 <span style={{ background: '#1548AB' }}>DABT</span>
                 <span style={{ background: '#018782' }}>ERT</span>
@@ -99,7 +99,7 @@ export default function HomePage() {
               <Image src="https://images.pexels.com/photos/7567486/pexels-photo-7567486.jpeg?auto=compress&cs=tinysrgb&w=800" alt="" fill sizes="(max-width:980px) 60vw, 320px" />
             </div>
             <div className="hv-emblem">
-              <Image src="/images/logo-mark.png" alt="" width={62} height={62} />
+              <Image src="/images/logo-mark.webp" alt="" width={62} height={62} />
             </div>
             <div className="hv-badge hv-b1">
               <span className="icon-box"><Icon name="award" /></span>

@@ -22,7 +22,7 @@ export default function PageHero({ eyebrow, title, lead, img, crumbs, chips, chi
   return (
     <section className="page-hero">
       <div className="bg" aria-hidden="true">
-        <Image src={img} alt="" fill preload sizes="100vw" />
+        <Image src={img} alt="" fill preload sizes="100vw" quality={55} />
       </div>
       <div className="container">
         <nav className="crumbs fade-up" aria-label="Breadcrumb">
@@ -34,17 +34,17 @@ export default function PageHero({ eyebrow, title, lead, img, crumbs, chips, chi
             </span>
           ))}
         </nav>
-        <div className="eyebrow fade-up" style={{ ['--d' as string]: '80ms' }}>{eyebrow}</div>
-        <h1 className="fade-up" style={{ ['--d' as string]: '160ms' }}>{title}</h1>
-        {lead && <p className="lead fade-up" style={{ ['--d' as string]: '260ms' }}>{lead}</p>}
+        <div className="eyebrow fade-up" style={{ ['--d' as string]: '30ms' }}>{eyebrow}</div>
+        <h1 className="fade-up" style={{ ['--d' as string]: '70ms' }}>{title}</h1>
+        {lead && <p className="lead fade-up" style={{ ['--d' as string]: '120ms' }}>{lead}</p>}
         {chips && (
-          <div className="chips fade-up" style={{ ['--d' as string]: '360ms' }}>
+          <div className="chips fade-up" style={{ ['--d' as string]: '170ms' }}>
             {chips.map((c) => (
               <span key={c} className="chip"><span className="dot" />{c}</span>
             ))}
           </div>
         )}
-        {children && <div className="fade-up" style={{ ['--d' as string]: '420ms' }}>{children}</div>}
+        {children && <div className="fade-up" style={{ ['--d' as string]: '200ms' }}>{children}</div>}
       </div>
     </section>
   );

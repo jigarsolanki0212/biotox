@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   images: {
+    loader: 'custom',
+    loaderFile: './image-loader.js',
+    deviceSizes: [480, 640, 828, 1080, 1280, 1600, 1920],
+    imageSizes: [96, 160, 256, 384],
+    qualities: [55, 70, 75],
     remotePatterns: [
       {
         protocol: 'https',
@@ -59,6 +65,10 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/images/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
+      },
+      {
         source: '/(.*)',
         headers: [
           {
@@ -72,6 +82,10 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
         ],
       },
