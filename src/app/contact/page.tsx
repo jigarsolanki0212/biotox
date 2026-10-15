@@ -5,7 +5,7 @@ import JsonLd from '@/components/JsonLd';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Enquire for Medical Device Toxicology',
+  title: 'Contact Our Toxicology Experts',
   description:
     'Reach out to our certified toxicologists (DABT, ERT, UKRT) for biocompatibility evaluation, BEP/BER roadmaps, and global regulatory compliance.',
   alternates: {

@@ -9,7 +9,7 @@ import { standards, ICONS } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Standards & Accreditations — ISO 10993, FDA, EU MDR, OECD GLP',
+  title: 'Standards — ISO 10993, FDA, EU MDR, OECD GLP',
   description:
     'Globally recognised regulatory frameworks we work with: ISO 10993-1:2025, FDA 510(k), EU MDR 2017/745, OECD GLP, ISO 17025, NABL, and CDSCO.',
   alternates: {

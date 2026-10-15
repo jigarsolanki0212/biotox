@@ -67,6 +67,10 @@ export default function Header() {
 
   useEffect(() => {
     document.documentElement.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMobileMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [mobileMenuOpen]);
 
   const onDark = DARK_HERO.some((p) => pathname === p || pathname.startsWith(`${p}/`));

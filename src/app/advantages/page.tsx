@@ -8,7 +8,7 @@ import { advantages, ICONS } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Why Us — Key Advantages of BIOTOX by MedReg',
+  title: 'Why Choose Us — Key Advantages',
   description:
     'Discover why medical device manufacturers choose BIOTOX: Internationally certified toxicologists (DABT, ERT, UKRT), faster approvals, and minimized testing costs.',
   alternates: {

@@ -15,8 +15,15 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
       {
-        userAgent: ['GPTBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot', 'anthropic-ai', 'cohere-ai'],
+        // AI assistants and AI search engines: allowed so the site can be cited in AI answers.
+        userAgent: [
+          'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
+          'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'anthropic-ai',
+          'PerplexityBot', 'Perplexity-User',
+          'Google-Extended', 'Applebot-Extended', 'CCBot', 'cohere-ai', 'meta-externalagent', 'Amazonbot', 'DuckAssistBot',
+        ],
         allow: '/',
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,

@@ -7,7 +7,7 @@ import { bepSteps, berSteps } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'BEP + BER Process — Biological Safety Evaluation',
+  title: 'BEP + BER Biological Evaluation Process',
   description:
     'End-to-end biological safety compliance as per ISO 10993 & global regulations — from planning (BEP) to final regulator-ready submission (BER).',
   alternates: {

@@ -14,7 +14,10 @@ export default function FloatingActions() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Use the smooth-scroll engine when it is running so the two don't fight.
+    const lenis = (window as Window & { __lenis?: { scrollTo: (t: number) => void } }).__lenis;
+    if (lenis) lenis.scrollTo(0);
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

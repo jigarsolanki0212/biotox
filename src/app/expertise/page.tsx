@@ -10,9 +10,9 @@ import { services } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema, getServiceSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Our Expertise — Medical Device Toxicology Services',
+  title: 'Medical Device Toxicology Services',
   description:
-    'Smarter toxicology for better regulatory decisions — covering biocompatibility evaluation, BEP/BER, TRA, QSAR, in-silico safety, ISO 18562, ISO 7405 and ISO 10993 compliance.',
+    'Medical device toxicology services: biocompatibility evaluation, BEP/BER, TRA, QSAR, in-silico safety and ISO 10993, ISO 18562 and ISO 7405 compliance.',
   alternates: { canonical: `${siteConfig.url}/expertise` },
   openGraph: {
     title: 'Our Expertise — BIOTOX by MedReg',

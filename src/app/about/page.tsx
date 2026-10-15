@@ -9,9 +9,9 @@ import Icon from '@/components/Icon';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'About Us — Expert Medical Device Toxicology',
+  title: 'About Us — Medical Device Toxicologists',
   description:
-    'BIOTOX by MedReg delivers expert toxicology and biological safety evaluation for medical devices worldwide, backed by 20+ years of expertise and DABT · ERT · UKRT certified toxicologists.',
+    'Medical device toxicology and biological safety evaluation worldwide, with 20+ years of expertise and DABT · ERT · UKRT certified toxicologists.',
   alternates: { canonical: `${siteConfig.url}/about` },
   openGraph: {
     title: 'About BIOTOX by MedReg',

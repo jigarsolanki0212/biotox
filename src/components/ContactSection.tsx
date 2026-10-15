@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { siteConfig } from '@/lib/seo-config';
 import { services } from '@/lib/data';
+import { validateEnquiry, ENQUIRY_LIMITS, type EnquiryField } from '@/lib/enquiry';
 
 interface ContactSectionProps {
   id?: string;
@@ -34,12 +35,23 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [invalidField, setInvalidField] = useState<EnquiryField | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    if (e.target.name === invalidField) {
+      setInvalidField(null);
+      setStatus({ message: '', type: '' });
+    }
+  };
+
+  const showError = (message: string, field: EnquiryField | null = null) => {
+    setStatus({ message, type: 'error' });
+    setInvalidField(field);
+    if (field) document.getElementById(field)?.focus();
   };
 
   const mailtoFallback = () => {
@@ -58,28 +70,19 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
     const body = encodeURIComponent(bodyLines.join('\n'));
     window.location.href = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`;
     setStatus({
-      message: "Opening your email client to send your enquiry...",
-      type: 'success',
+      message: `We couldn't send this automatically, so your email app is opening with your enquiry filled in. You can also email ${siteConfig.contact.email} or call ${siteConfig.contact.phonePrimary}.`,
+      type: 'error',
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !formData.fullName ||
-      !formData.emailAddress ||
-      !formData.phoneNumber ||
-      !formData.serviceRequired ||
-      !formData.message ||
-      !consent
-    ) {
-      setStatus({
-        message: consent ? 'Please fill in all required fields.' : 'Please fill in all required fields and accept the privacy policy.',
-        type: 'error',
-      });
-      return;
-    }
+    if (isSubmitting) return;
+    const trimmed = Object.fromEntries(Object.entries(formData).map(([k, v]) => [k, v.trim()])) as typeof formData;
+    const problem = validateEnquiry(trimmed);
+    if (problem) return showError(problem.message, problem.field);
+    if (!consent) return showError('Please accept the privacy policy so we can reply to you.');
 
     setIsSubmitting(true);
     setStatus({ message: '', type: '' });
@@ -91,12 +94,13 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(trimmed),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok && data.success) {
+        setInvalidField(null);
         setStatus({
           message: data.message || "Thank you! We've received your enquiry and will reply within 2 hours.",
           type: 'success',
@@ -111,6 +115,9 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
           website: '',
         });
         setConsent(false);
+      } else if (res.status === 400 || res.status === 429) {
+        // The server rejected the details themselves; say why instead of opening the email app.
+        showError(data.message || 'Please check your details and try again.', data.field || null);
       } else {
         mailtoFallback();
       }
@@ -237,7 +244,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
           <div className="contact-form-wrap" data-reveal="right">
             <h3>Tell us about your device</h3>
             <p>Share a few details and a certified toxicologist will get back to you, usually within 2 hours on business days.</p>
-            <form className="enquiryForm" onSubmit={handleSubmit} noValidate>
+            <form className="enquiryForm" onSubmit={handleSubmit} noValidate aria-describedby={status.message ? 'enquiryStatus' : undefined}>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="fullName">Full Name</label>
@@ -245,6 +252,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                     type="text"
                     id="fullName"
                     name="fullName"
+                    aria-invalid={invalidField === 'fullName'} maxLength={ENQUIRY_LIMITS.fullName} autoComplete="name"
                     placeholder="John Doe"
                     value={formData.fullName}
                     onChange={handleChange}
@@ -257,6 +265,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                     type="email"
                     id="emailAddress"
                     name="emailAddress"
+                    aria-invalid={invalidField === 'emailAddress'} maxLength={ENQUIRY_LIMITS.emailAddress} autoComplete="email"
                     placeholder="john@company.com"
                     value={formData.emailAddress}
                     onChange={handleChange}
@@ -272,6 +281,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                     type="tel"
                     id="phoneNumber"
                     name="phoneNumber"
+                    aria-invalid={invalidField === 'phoneNumber'} maxLength={ENQUIRY_LIMITS.phoneNumber} autoComplete="tel"
                     placeholder="+91 98765 43210"
                     value={formData.phoneNumber}
                     onChange={handleChange}
@@ -286,6 +296,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                     type="text"
                     id="companyName"
                     name="companyName"
+                    maxLength={ENQUIRY_LIMITS.companyName} autoComplete="organization"
                     placeholder="e.g. MedTech Solutions"
                     value={formData.companyName}
                     onChange={handleChange}
@@ -298,6 +309,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                 <select
                   id="serviceRequired"
                   name="serviceRequired"
+                  aria-invalid={invalidField === 'serviceRequired'}
                   value={formData.serviceRequired}
                   onChange={handleChange}
                   required
@@ -319,6 +331,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
                 <textarea
                   id="message"
                   name="message"
+                  aria-invalid={invalidField === 'message'} maxLength={ENQUIRY_LIMITS.message}
                   rows={5}
                   placeholder="How can we help you?"
                   value={formData.message}
@@ -349,7 +362,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
               </button>
 
               {status.message && (
-                <p className={`form-note ${status.type}`} role="alert">
+                <p className={`form-note ${status.type}`} id="enquiryStatus" role={status.type === 'error' ? 'alert' : 'status'}>
                   {status.message}
                 </p>
               )}

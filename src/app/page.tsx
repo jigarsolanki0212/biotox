@@ -14,7 +14,7 @@ import { siteConfig, getFaqSchema, getBreadcrumbSchema, getServiceSchema } from 
 export const metadata: Metadata = {
   title: { absolute: 'BIOTOX by MedReg — Expert Toxicology for Medical Devices' },
   description:
-    'Expert toxicology and biological safety evaluation for medical devices — biocompatibility, BEP/BER, toxicological risk assessment, and global regulatory compliance by DABT · ERT · UKRT certified toxicologists.',
+    'Medical device toxicology by DABT · ERT · UKRT certified experts: ISO 10993 biocompatibility, BEP/BER, toxicological risk assessment and global compliance.',
   alternates: { canonical: siteConfig.url },
   openGraph: {
     title: 'BIOTOX by MedReg — Expert Toxicology',
@@ -81,7 +81,7 @@ export default function HomePage() {
             <div className="hero-trust fade-up" style={{ ['--d' as string]: '480ms' }}>
               <div className="avatars" aria-hidden="true">
                 <span style={{ background: '#1548AB' }}>DABT</span>
-                <span style={{ background: '#018782' }}>ERT</span>
+                <span style={{ background: '#017C77' }}>ERT</span>
                 <span style={{ background: '#2563EB' }}>UKRT</span>
               </div>
               <p>

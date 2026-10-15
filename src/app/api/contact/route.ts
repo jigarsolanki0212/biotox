@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { ENQUIRY_LIMITS, validateEnquiry } from '@/lib/enquiry';
 
 /**
  * Enquiry delivery. Configure in Vercel → Settings → Environment Variables (see .env.example):
@@ -8,8 +9,6 @@ import { NextResponse } from 'next/server';
  * With nothing configured, production answers 503 and the form falls back to the visitor's email app,
  * so an enquiry is never shown as sent when it was not.
  */
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 
 const escapeHtml = (v: string) =>
   v.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
@@ -36,6 +35,7 @@ async function sendResend(subject: string, fields: [string, string][], replyTo: 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(10000),
     body: JSON.stringify({
       from: process.env.LEAD_FROM_EMAIL || 'BIOTOX Website <onboarding@resend.dev>',
       to,
@@ -54,6 +54,7 @@ async function sendWebhook(subject: string, fields: [string, string][]) {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(10000),
     body: JSON.stringify({ subject, ...Object.fromEntries(fields), submittedAt: new Date().toISOString(), source: 'medregbiotox.com' }),
   });
   if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
@@ -61,33 +62,47 @@ async function sendWebhook(subject: string, fields: [string, string][]) {
 }
 
 export async function POST(request: Request) {
+  let data: Record<string, unknown>;
   try {
-    const data = await request.json();
-    const { fullName, emailAddress, phoneNumber, serviceRequired, message, companyName, website } = data;
+    data = await request.json();
+  } catch {
+    return NextResponse.json({ success: false, message: 'Invalid request.' }, { status: 400 });
+  }
+  if (!data || typeof data !== 'object') {
+    return NextResponse.json({ success: false, message: 'Invalid request.' }, { status: 400 });
+  }
 
+  try {
     // Honeypot: real visitors never fill the hidden "website" field.
-    if (website) {
+    if (data.website) {
       return NextResponse.json({ success: true, message: 'Thank you! We have received your enquiry.' });
     }
 
-    if (!fullName || !emailAddress || !phoneNumber || !serviceRequired || !message) {
-      return NextResponse.json({ success: false, message: 'Please fill in all required fields.' }, { status: 400 });
-    }
-    if (!EMAIL_RE.test(emailAddress)) {
-      return NextResponse.json({ success: false, message: 'Please provide a valid email address.' }, { status: 400 });
+    // Only plain strings count; anything else (objects, numbers) is treated as missing.
+    const str = (k: keyof typeof ENQUIRY_LIMITS) => (typeof data[k] === 'string' ? (data[k] as string).trim().slice(0, ENQUIRY_LIMITS[k]) : '');
+    const fullName = str('fullName');
+    const emailAddress = str('emailAddress');
+    const phoneNumber = str('phoneNumber');
+    const companyName = str('companyName');
+    const serviceRequired = str('serviceRequired');
+    const message = str('message');
+
+    const problem = validateEnquiry({ fullName, emailAddress, phoneNumber, serviceRequired, message });
+    if (problem) {
+      return NextResponse.json({ success: false, message: problem.message, field: problem.field }, { status: 400 });
     }
     if (throttled(request)) {
       return NextResponse.json({ success: false, message: 'Too many enquiries from this connection. Please email us directly.' }, { status: 429 });
     }
 
-    const subject = `New enquiry: ${String(serviceRequired).slice(0, 80)} (${String(fullName).slice(0, 80)})`;
+    const subject = `New enquiry: ${serviceRequired.slice(0, 80)} (${fullName.slice(0, 80)})`;
     const fields: [string, string][] = [
-      ['Full name', String(fullName).slice(0, 200)],
-      ['Email', String(emailAddress).slice(0, 200)],
-      ['Phone', String(phoneNumber).slice(0, 40)],
-      ['Company', String(companyName || '').slice(0, 200)],
-      ['Service required', String(serviceRequired).slice(0, 200)],
-      ['Message', String(message).slice(0, 5000)],
+      ['Full name', fullName],
+      ['Email', emailAddress],
+      ['Phone', phoneNumber],
+      ['Company', companyName],
+      ['Service required', serviceRequired],
+      ['Message', message],
     ];
 
     const results = await Promise.allSettled([sendResend(subject, fields, emailAddress), sendWebhook(subject, fields)]);

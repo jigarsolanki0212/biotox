@@ -31,19 +31,19 @@ export default function Footer() {
             <p>Expert toxicology solutions for safe, compliant, successful products. Science · Safety · Compliance.</p>
           </div>
           <div className="footer-col">
-            <h5>Services</h5>
+            <h2>Services</h2>
             {services.slice(0, 5).map((s) => (
               <Link key={s.slug} href={serviceHref(s.slug)}>{s.title}</Link>
             ))}
           </div>
           <div className="footer-col">
-            <h5>Specialised</h5>
+            <h2>Specialised</h2>
             {services.slice(5).map((s) => (
               <Link key={s.slug} href={serviceHref(s.slug)}>{s.title}</Link>
             ))}
           </div>
           <div className="footer-col">
-            <h5>Company</h5>
+            <h2>Company</h2>
             <Link href="/about">About Us</Link>
             <Link href="/process">BEP + BER Process</Link>
             <Link href="/advantages">Why Choose Us</Link>
@@ -52,7 +52,7 @@ export default function Footer() {
             <Link href="/contact">Contact</Link>
           </div>
           <div className="footer-col">
-            <h5>Get in touch</h5>
+            <h2>Get in touch</h2>
             <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
             <a href={`tel:${siteConfig.contact.phonePrimaryRaw}`}>{siteConfig.contact.phonePrimary}</a>
             <a href={`tel:${siteConfig.contact.phoneSecondaryRaw}`}>{siteConfig.contact.phoneSecondary}</a>

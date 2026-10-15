@@ -24,13 +24,17 @@ export async function generateMetadata({ params }: PageProps<'/expertise/[slug]'
   const s = getService(slug);
   if (!s) return {};
   const url = `${siteConfig.url}${serviceHref(slug)}`;
+  // Keep the full title (with the " — BIOTOX by MedReg" suffix) within ~65 characters for search results.
+  const title = `${s.title} — ${s.tag}`.length <= 46 ? `${s.title} — ${s.tag}` : s.title;
+  // Search snippets cut off around 160 characters; end on a whole word.
+  const description = s.desc.length <= 160 ? s.desc : `${s.desc.slice(0, 157).replace(/[\s,;:.]+\S*$/, '')}…`;
   return {
-    title: `${s.title} — ${s.tag}`,
-    description: s.desc,
+    title,
+    description,
     alternates: { canonical: url },
     openGraph: {
       title: `${s.title} — BIOTOX by MedReg`,
-      description: s.desc,
+      description,
       url,
       images: [{ url: s.img.replace('w=800', 'w=1200'), width: 1200, height: 630, alt: s.title }],
     },
@@ -179,13 +183,13 @@ export default async function ServiceDetailPage({ params }: PageProps<'/expertis
 
           <aside className="sd-aside">
             <nav className="toc" aria-label="On this page">
-              <h4>On this page</h4>
+              <h2>On this page</h2>
               {SECTIONS.map(([id, label]) => (
                 <a key={id} href={`#${id}`}>{label}</a>
               ))}
             </nav>
             <div className="aside-cta">
-              <h4>Talk to a toxicologist</h4>
+              <h2>Talk to a toxicologist</h2>
               <p>Get a scoped proposal for {s.title.toLowerCase()} — direct expert response within 2 hours.</p>
               <Link href={`/contact?service=${encodeURIComponent(s.title)}`} className="btn btn-light">
                 Request a proposal <Icon name="arrow" />
@@ -196,9 +200,9 @@ export default async function ServiceDetailPage({ params }: PageProps<'/expertis
               </div>
             </div>
             <nav className="other-services" aria-label="Other services">
-              <h4>All services</h4>
+              <h2>All services</h2>
               {services.map((o) => (
-                <Link key={o.slug} href={serviceHref(o.slug)} aria-current={o.slug === slug ? 'page' : undefined} style={o.slug === slug ? { color: 'var(--accent)', background: 'var(--bg-soft)' } : undefined}>
+                <Link key={o.slug} href={serviceHref(o.slug)} aria-current={o.slug === slug ? 'page' : undefined} style={o.slug === slug ? { color: 'var(--accent-text)', background: 'var(--bg-soft)' } : undefined}>
                   {o.title} <Icon name="chevronRight" />
                 </Link>
               ))}

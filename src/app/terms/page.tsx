@@ -3,10 +3,19 @@ import Link from 'next/link';
 import PageHero from '@/components/PageHero';
 import { siteConfig } from '@/lib/seo-config';
 
+const metaDescription =
+  'Terms governing use of the BIOTOX by MedReg website, its content, enquiry form and the medical device toxicology information it provides.';
+
 export const metadata: Metadata = {
   title: 'Terms of Use',
-  description: 'Terms governing the use of the BIOTOX by MedReg website.',
+  description: metaDescription,
   alternates: { canonical: `${siteConfig.url}/terms` },
+  openGraph: {
+    title: 'Terms of Use — BIOTOX by MedReg',
+    description: metaDescription,
+    url: `${siteConfig.url}/terms`,
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BIOTOX by MedReg' }],
+  },
 };
 
 export default function TermsPage() {

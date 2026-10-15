@@ -9,9 +9,9 @@ import { devices } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Device Categories — Medical Device Types We Cover',
+  title: 'Medical Device Types We Cover',
   description:
-    'Biocompatibility and regulatory compliance support across all major medical device categories — Class I to Class III, implants, cardiovascular, orthopaedic, IVD, and respiratory.',
+    'Biocompatibility and regulatory support for every major device category: Class I–III, implants, cardiovascular, orthopaedic, IVD and respiratory devices.',
   alternates: {
     canonical: `${siteConfig.url}/devices`,
   },

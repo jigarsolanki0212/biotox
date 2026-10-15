@@ -3,10 +3,19 @@ import Link from 'next/link';
 import PageHero from '@/components/PageHero';
 import { siteConfig } from '@/lib/seo-config';
 
+const metaDescription =
+  'How BIOTOX by MedReg collects, uses and protects personal information submitted through this website.';
+
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'How BIOTOX by MedReg collects, uses and protects personal information submitted through this website.',
+  description: metaDescription,
   alternates: { canonical: `${siteConfig.url}/privacy-policy` },
+  openGraph: {
+    title: 'Privacy Policy — BIOTOX by MedReg',
+    description: metaDescription,
+    url: `${siteConfig.url}/privacy-policy`,
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BIOTOX by MedReg' }],
+  },
 };
 
 export default function PrivacyPage() {
