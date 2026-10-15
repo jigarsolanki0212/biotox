@@ -7,7 +7,7 @@ import FloatingActions from '@/components/FloatingActions';
 import Motion from '@/components/Motion';
 import PageTransition from '@/components/PageTransition';
 import JsonLd from '@/components/JsonLd';
-import { siteConfig, getOrganizationSchema, getWebsiteSchema } from '@/lib/seo-config';
+import { siteConfig, isLiveSite, getOrganizationSchema, getWebsiteSchema } from '@/lib/seo-config';
 
 // BIOTOX type: Space Grotesk headings, Geist text, Geist Mono labels (scientific feel, distinct from MedReg's Poppins/Montserrat).
 const spaceGrotesk = Space_Grotesk({
@@ -91,7 +91,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
-  robots: {
+  robots: isLiveSite ? {
     index: true,
     follow: true,
     nocache: false,
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
+  } : { index: false, follow: false },
 };
 
 export default function RootLayout({

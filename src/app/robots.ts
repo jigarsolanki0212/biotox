@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next';
-import { siteConfig } from '@/lib/seo-config';
+import { siteConfig, isLiveSite } from '@/lib/seo-config';
 
 export default function robots(): MetadataRoute.Robots {
+  // Staging/preview copies: keep every crawler out.
+  if (!isLiveSite) return { rules: [{ userAgent: '*', disallow: '/' }] };
+
   return {
     rules: [
       {

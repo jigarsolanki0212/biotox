@@ -1,3 +1,10 @@
+/**
+ * True only for the public site. Vercel sets VERCEL_ENV to "preview" for every branch other than the production
+ * branch (e.g. the staging copy built from main); those copies must stay out of search results so they never
+ * compete with medregbiotox.com. Local builds count as live.
+ */
+export const isLiveSite = !process.env.VERCEL_ENV || process.env.VERCEL_ENV === 'production';
+
 export const siteConfig = {
   name: "BIOTOX by MedReg",
   shortName: "BIOTOX",
