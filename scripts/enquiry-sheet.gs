@@ -344,6 +344,62 @@ function buildDashboard_() {
     .setPosition(25, 7, 0, 0).build());
 }
 
+/**
+ * DEMO DATA: run addSampleData from the editor to fill the tracker with 70-90 realistic sample enquiries spread over
+ * the last 12 months (all marked Source = "sample"), so the Dashboard has something to show.
+ * Run removeSampleData to delete every sample row again; real enquiries are never touched.
+ */
+function addSampleData() {
+  var sheet = getSheet_();
+  var first = ['Anita', 'David', 'Priya', 'Marco', 'Neha', 'Rahul', 'Sofia', 'Kenji', 'Aisha', 'Lukas', 'Meera', 'James',
+    'Chen', 'Fatima', 'Arjun', 'Elena', 'Omar', 'Hannah', 'Vikram', 'Grace', 'Ravi', 'Isabel', 'Tom', 'Kavya'];
+  var last = ['Rao', 'Lee', 'Shah', 'Rossi', 'Gupta', 'Mehta', 'Garcia', 'Tanaka', 'Khan', 'Becker', 'Iyer', 'Brown',
+    'Wang', 'Hassan', 'Patel', 'Novak', 'Ali', 'Schmidt', 'Nair', 'Wilson', 'Desai', 'Lopez', 'Clark', 'Reddy'];
+  var companies = ['OrthoMed Implants', 'CardioFlow', 'DentaCare Labs', 'RespiraTech', 'MedPlast', 'NeuroLink Devices',
+    'SurgiTools', 'VitaCath', 'OptiLens Medical', 'BioSeal', 'Nova Diagnostics', 'FlexStent', ''];
+  var phones = ['+91 9', '+1 555 01', '+44 7700 9', '+49 151 0', '+971 50 0', '+65 8'];
+  // Services weighted the way enquiries usually arrive (biocompatibility and BEP/BER most often)
+  var weighted = [0, 0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10];
+  var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+  var n = 70 + Math.floor(Math.random() * 21); // 70-90
+  var now = new Date();
+  var rows = [];
+  for (var i = 0; i < n; i++) {
+    // More enquiries in recent months: square the random number to skew towards today
+    var daysAgo = Math.floor(Math.pow(Math.random(), 1.6) * 360);
+    var d = new Date(now.getTime() - daysAgo * 86400000);
+    d.setHours(9 + Math.floor(Math.random() * 10), Math.floor(Math.random() * 60), 0, 0);
+    var status;
+    var r = Math.random();
+    if (daysAgo < 3) status = r < 0.8 ? 'New' : 'Contacted';
+    else if (daysAgo < 21) status = r < 0.25 ? 'New' : r < 0.6 ? 'Contacted' : r < 0.9 ? 'Proposal sent' : 'Spam';
+    else status = r < 0.12 ? 'Contacted' : r < 0.32 ? 'Proposal sent' : r < 0.62 ? 'Won' : r < 0.9 ? 'Lost' : 'Spam';
+    var f = pick(first), l = pick(last), co = pick(companies);
+    rows.push([d, status, f + ' ' + l, (f + '.' + l).toLowerCase() + '@example.com',
+      "'" + pick(phones) + String(Math.floor(1000000 + Math.random() * 8999999)), co, SERVICES[pick(weighted)],
+      'Sample enquiry for the dashboard demo.', '', 'sample']);
+  }
+  var start = sheet.getLastRow() + 1;
+  sheet.getRange(start, 1, rows.length, COLUMNS.length).setValues(rows);
+  sheet.getRange(2, 1, sheet.getLastRow() - 1, COLUMNS.length).sort({ column: 1, ascending: true });
+  formatSheet_(sheet); // widen the filter to cover the new rows
+  SpreadsheetApp.getActiveSpreadsheet().toast(n + ' sample enquiries added. Run removeSampleData to delete them.', 'BIOTOX', 8);
+}
+
+/** Deletes every row whose Source is "sample" (from addSampleData or test posts). Real enquiries stay. */
+function removeSampleData() {
+  var sheet = getSheet_();
+  var last = sheet.getLastRow();
+  if (last < 2) return;
+  var range = sheet.getRange(2, 1, last - 1, COLUMNS.length);
+  var keep = range.getValues().filter(function (row) { return String(row[9]).toLowerCase() !== 'sample'; });
+  var removed = last - 1 - keep.length;
+  range.clearContent();
+  if (keep.length) sheet.getRange(2, 1, keep.length, COLUMNS.length).setValues(keep);
+  formatSheet_(sheet);
+  SpreadsheetApp.getActiveSpreadsheet().toast(removed + ' sample rows removed.', 'BIOTOX', 8);
+}
+
 function reply_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
