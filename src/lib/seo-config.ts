@@ -83,7 +83,7 @@ export const siteConfig = {
 export function getOrganizationSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
+    "@type": "ProfessionalService",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     legalName: "MedReg BioTox LLP",

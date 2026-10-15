@@ -7,6 +7,7 @@ import FloatingActions from '@/components/FloatingActions';
 import Motion from '@/components/Motion';
 import PageTransition from '@/components/PageTransition';
 import JsonLd from '@/components/JsonLd';
+import { visibleInsights } from '@/lib/insights';
 import { siteConfig, isLiveSite, getOrganizationSchema, getWebsiteSchema } from '@/lib/seo-config';
 
 // BIOTOX type: Space Grotesk headings, Geist text, Geist Mono labels (scientific feel, distinct from MedReg's Poppins/Montserrat).
@@ -140,7 +141,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <Motion />
-        <Header />
+        <Header showInsights={visibleInsights.length > 0} />
         <main id="mainContent">
           <PageTransition>{children}</PageTransition>
         </main>

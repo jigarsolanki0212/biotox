@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ContactSection from '@/components/ContactSection';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
@@ -62,6 +63,7 @@ export default function ContactPage() {
         crumbs={[{ name: 'Contact' }]}
       />
       <ContactSection id="contact" />
+      <RelatedServices slugs={['biocompatibility-evaluation', 'bep-ber-preparation', 'toxicological-risk-assessment']} />
     </>
   );
 }

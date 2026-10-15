@@ -3,6 +3,7 @@ import Image from 'next/image';
 import ContactSection from '@/components/ContactSection';
 import JsonLd from '@/components/JsonLd';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import CtaBand from '@/components/CtaBand';
 import Icon from '@/components/Icon';
 import { devices } from '@/lib/data';
@@ -59,6 +60,7 @@ export default function DevicesPage() {
         </div>
       </section>
 
+      <RelatedServices slugs={['biocompatibility-evaluation', 'iso-18562-breathing-gas-pathway', 'iso-7405-dental-devices']} />
       <CtaBand title="Don’t see your device category?" text="We support Class I, II and III devices across all contact types and exposure durations. Tell us about your device and we will scope the right evaluation." />
       <ContactSection />
     </>

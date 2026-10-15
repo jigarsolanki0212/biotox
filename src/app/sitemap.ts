@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { siteConfig } from '@/lib/seo-config';
 import { services } from '@/lib/data';
+import { visibleInsights } from '@/lib/insights';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -21,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/devices', 0.8),
     page('/standards', 0.8),
     page('/contact', 0.9),
+    ...(visibleInsights.length ? [page('/insights', 0.7, 'weekly')] : []),
+    ...visibleInsights.map((a) => ({ ...page(`/insights/${a.slug}`, 0.7), lastModified: new Date(`${a.date}T00:00:00Z`) })),
     page('/privacy-policy', 0.3, 'yearly'),
     page('/terms', 0.3, 'yearly'),
   ];

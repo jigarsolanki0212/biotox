@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import ContactSection from '@/components/ContactSection';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import CtaBand from '@/components/CtaBand';
 import JsonLd from '@/components/JsonLd';
 import { advantages, ICONS } from '@/lib/data';
@@ -72,6 +73,7 @@ export default function AdvantagesPage() {
         </div>
       </section>
 
+      <RelatedServices slugs={['biocompatibility-evaluation', 'in-silico-safety-assessment', 'global-regulatory-compliance']} />
       <CtaBand />
       <ContactSection />
     </>

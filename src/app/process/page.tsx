@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import CtaBand from '@/components/CtaBand';
 import ContactSection from '@/components/ContactSection';
 import JsonLd from '@/components/JsonLd';
@@ -35,7 +36,7 @@ export default function ProcessPage() {
       <PageHero
         eyebrow="Our Process"
         title={<>BEP + BER <em>Solutions</em> for Medical Devices</>}
-        lead="End-to-end biological safety compliance as per ISO 10993 & global regulations — from planning to final submission."
+        lead="Biological Evaluation Plan (BEP) and Biological Evaluation Report (BER) preparation for medical devices, as per ISO 10993 and global regulations, from planning to final submission."
         img="https://images.pexels.com/photos/7550538/pexels-photo-7550538.jpeg?auto=compress&cs=tinysrgb&w=1800"
         crumbs={[{ name: 'BEP + BER' }]}
         chips={['ISO 10993-1:2025', 'ISO 10993-17', 'ISO 10993-18', 'ISO 14971']}
@@ -105,6 +106,7 @@ export default function ProcessPage() {
         </div>
       </section>
 
+      <RelatedServices slugs={['bep-ber-preparation', 'biocompatibility-evaluation', 'toxicological-risk-assessment']} />
       <CtaBand title="Start with a Biological Evaluation Plan" />
       <ContactSection />
     </>

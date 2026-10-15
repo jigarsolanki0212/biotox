@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import JsonLd from '@/components/JsonLd';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import CtaBand from '@/components/CtaBand';
 import Counter from '@/components/Counter';
 import Icon from '@/components/Icon';
@@ -141,6 +142,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <RelatedServices slugs={['biocompatibility-evaluation', 'bep-ber-preparation', 'toxicological-risk-assessment']} />
       <CtaBand />
     </>
   );

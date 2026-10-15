@@ -93,10 +93,10 @@ export default function HomePage() {
 
           <div className="hero-visual" aria-hidden="true">
             <div className="hv-frame hv-main">
-              <Image src="https://images.unsplash.com/photo-1748261348213-62f4c399bb72?auto=format&fit=crop&w=1200&q=75" alt="" fill preload sizes="(max-width:980px) 90vw, 480px" />
+              <Image src="https://images.unsplash.com/photo-1748261348213-62f4c399bb72?auto=format&fit=crop&w=1200&q=75" alt="Toxicologist pipetting samples for medical device biocompatibility testing" fill preload sizes="(max-width:980px) 90vw, 480px" />
             </div>
             <div className="hv-frame hv-side">
-              <Image src="https://images.pexels.com/photos/7567486/pexels-photo-7567486.jpeg?auto=compress&cs=tinysrgb&w=800" alt="" fill sizes="(max-width:980px) 60vw, 320px" />
+              <Image src="https://images.pexels.com/photos/7567486/pexels-photo-7567486.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Reviewing toxicological risk assessment data on screen" fill sizes="(max-width:980px) 60vw, 320px" />
             </div>
             <div className="hv-emblem">
               <Image src="/images/logo-mark.webp" alt="" width={62} height={62} />
@@ -243,7 +243,7 @@ export default function HomePage() {
               const isPhoto = layout.includes('photo');
               return (
                 <div key={a.title} className={`bento-item ${layout}`} data-reveal="up" style={{ ['--d' as string]: (i % 3) * 90 }}>
-                  {isPhoto && <Image src={a.img} alt="" fill sizes="(max-width:980px) 100vw, 800px" />}
+                  {isPhoto && <Image src={a.img} alt={a.title} fill sizes="(max-width:980px) 100vw, 800px" />}
                   <span className="icon-box"><Icon name={a.icon} /></span>
                   <h3>{a.title}</h3>
                   <p style={{ maxWidth: 560 }}>{a.desc}</p>

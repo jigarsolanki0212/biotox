@@ -855,3 +855,15 @@ html.js img.fade-img.loaded{opacity:1;}
   .info-body a{display:flex; align-items:center; min-height:36px;}
   .contact-lines a{display:inline-flex; align-items:center; min-height:36px;}
 }
+
+/* ---------- Insights ---------- */
+.insight-meta{font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; color:var(--text-muted);}
+.insight-byline{font-family:var(--font-mono); font-size:13px; color:rgba(255,255,255,.75); margin-top:6px;}
+.article-body h2{font-size:clamp(22px,2.4vw,28px); margin:36px 0 12px;}
+.article-body h2:first-child{margin-top:0;}
+.article-body ul{padding-left:22px; margin:0 0 18px; display:grid; gap:8px;}
+.article-body li{color:var(--text-muted); font-size:16.5px;}
+.article-body p{max-width:70ch;}
+.draft-note{border:1px solid #F3D9A4; background:#FFF6E5; color:#7A4B00; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:28px; font-size:14.5px;}
+.draft-note ul{margin:8px 0 0; padding-left:20px;}
+html.dark .draft-note{background:#2A2110; border-color:#4D3D1C; color:#F4D08A;}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import ContactSection from '@/components/ContactSection';
 import PageHero from '@/components/PageHero';
+import RelatedServices from '@/components/RelatedServices';
 import CtaBand from '@/components/CtaBand';
 import Counter from '@/components/Counter';
 import JsonLd from '@/components/JsonLd';
@@ -108,6 +109,7 @@ export default function StandardsPage() {
         </div>
       </section>
 
+      <RelatedServices slugs={['biocompatibility-evaluation', 'risk-management-iso-14971', 'global-regulatory-compliance']} />
       <CtaBand />
       <ContactSection />
     </>

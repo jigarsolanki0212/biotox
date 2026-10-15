@@ -21,7 +21,7 @@ const navLinks = [
 // Pages that open with a dark photo hero, where the header starts in its light-on-dark style.
 const DARK_HERO = ['/about', '/expertise', '/process', '/advantages', '/devices', '/standards', '/contact', '/privacy-policy', '/terms'];
 
-export default function Header() {
+export default function Header({ showInsights = false }: { showInsights?: boolean }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -121,7 +121,7 @@ export default function Header() {
                   </Link>
                 </div>
               </li>
-              {navLinks.map((link) => (
+              {(showInsights ? [...navLinks, { href: '/insights', label: 'Insights' }] : navLinks).map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className={isActive(link.href) ? 'active' : ''}>
                     {link.label}
@@ -164,7 +164,7 @@ export default function Header() {
             ))}
           </div>
         </details>
-        {navLinks.map((link, i) => (
+        {(showInsights ? [...navLinks, { href: '/insights', label: 'Insights' }] : navLinks).map((link, i) => (
           <Link key={link.href} href={link.href} style={{ transitionDelay: `${180 + i * 50}ms` }}>
             {link.label}
           </Link>
