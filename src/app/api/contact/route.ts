@@ -55,9 +55,19 @@ async function sendWebhook(subject: string, fields: [string, string][]) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(10000),
-    body: JSON.stringify({ subject, ...Object.fromEntries(fields), submittedAt: new Date().toISOString(), source: 'medregbiotox.com' }),
+    body: JSON.stringify({
+      subject,
+      ...Object.fromEntries(fields),
+      submittedAt: new Date().toISOString(),
+      source: 'medregbiotox.com',
+      // Shared secret so only this site can write to the receiver (see scripts/enquiry-sheet.gs).
+      token: process.env.LEAD_WEBHOOK_SECRET || '',
+    }),
   });
   if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
+  // Google Apps Script always answers 200, so it reports failures in the body as {"ok":false}.
+  const reply = await res.text();
+  if (/"ok"\s*:\s*false/.test(reply)) throw new Error(`Webhook rejected the enquiry: ${reply.slice(0, 200)}`);
   return true;
 }
 
