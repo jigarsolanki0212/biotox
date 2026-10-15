@@ -690,6 +690,10 @@ html.dark .form-note.error{color:#F87171;}
 .footer-brand p{font-size:14.5px; margin:20px 0; max-width:300px;}
 .footer-brand .logo-img{height:38px; width:auto;}
 html.dark .footer-brand .logo-img{filter:brightness(0) invert(1); opacity:.95;}
+.footer-social{display:inline-flex; align-items:center; gap:10px; min-height:40px; padding:0 14px; border-radius:10px; border:1px solid var(--border-strong); background:var(--card); color:var(--text); font-size:14px; font-weight:500; transition:border-color .2s, color .2s, transform .3s var(--ease);}
+.footer-social svg{width:16px; height:16px; color:#0A66C2;}
+html.dark .footer-social svg{color:#fff;}
+.footer-social:hover{border-color:var(--accent); color:var(--accent-text); transform:translateY(-2px);}
 .footer-col h2{font-family:var(--font-mono); font-weight:500; text-transform:uppercase; color:var(--accent-text); font-size:12px; margin-bottom:18px; letter-spacing:.08em;}
 .footer-col a, .footer-col span{display:block; font-size:14.5px; margin-bottom:11px; transition:color .2s, transform .3s var(--ease);}
 .footer-col a:hover{color:var(--text); transform:translateX(3px);}

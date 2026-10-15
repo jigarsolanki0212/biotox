@@ -51,6 +51,7 @@ export const siteConfig = {
     phoneSecondaryRaw: "+919409406215",
     email: "enquiry@medregbiotox.com",
     whatsappUrl: "https://wa.me/918866461989",
+    linkedinUrl: "https://www.linkedin.com/company/biotox-by-medreg/",
     address: {
       street: "Titanium Business Park, Makarba",
       city: "Ahmedabad",
@@ -115,7 +116,7 @@ export function getOrganizationSchema() {
         availableLanguage: ["English", "Hindi", "Gujarati"],
       },
     ],
-    sameAs: ["https://www.medreg.in"],
+    sameAs: [siteConfig.contact.linkedinUrl, "https://www.medreg.in"],
     parentOrganization: {
       "@type": "Organization",
       name: "MedReg Consultancy LLP",
