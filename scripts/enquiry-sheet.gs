@@ -7,7 +7,8 @@
  *      SECRET   = the same long random value you put in Vercel as LEAD_WEBHOOK_SECRET
  *      NOTIFY   = enquiry@medregbiotox.com   (where alerts go; comma-separate for several)
  * 3. In the editor, choose the function "setupSheet" in the toolbar and click Run (formats the sheet, adds the
- *    Status dropdown, filters and the Summary tab). Safe to run again at any time.
+ *    Status dropdown and filters, and builds the Summary and Dashboard tabs). Safe to run again at any time;
+ *    existing enquiries are kept.
  * 4. Deploy -> Manage deployments -> pencil (Edit) -> Version: "New version" -> Deploy.
  *    (First time: Deploy -> New deployment -> Web app, Execute as: Me, Who has access: Anyone.)
  *    The Web app URL stays the same; it goes into Vercel as LEAD_WEBHOOK_URL.
@@ -15,6 +16,11 @@
 
 var SHEET_NAME = 'Enquiries';
 var SUMMARY_NAME = 'Summary';
+var DASHBOARD_NAME = 'Dashboard';
+var DATA_NAME = 'Chart data';
+var INK = '#05201E', TEAL = '#0B6B66', TINT = '#E8F3F0', MUTED = '#4D6360', LINE = '#DCE9E5';
+// Chart colour per status, in STATUSES order
+var STATUS_CHART = ['#0B6B66', '#0EA5E9', '#F59E0B', '#16A34A', '#9CA3AF', '#DC2626'];
 var COLUMNS = ['Received', 'Status', 'Full name', 'Email', 'Phone', 'Company', 'Service required', 'Message', 'Notes', 'Source'];
 var WIDTHS = [150, 130, 170, 230, 150, 180, 230, 420, 260, 140];
 var STATUSES = ['New', 'Contacted', 'Proposal sent', 'Won', 'Lost', 'Spam'];
@@ -98,12 +104,21 @@ function getSheet_() {
   return sheet;
 }
 
-/** Run once from the editor (and again any time) to format the tracker and build the Summary tab. */
+/** Run once from the editor (and again any time) to format the tracker and rebuild Summary + Dashboard. */
 function setupSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = getSheet_();
   formatSheet_(sheet);
+  buildChartData_();
   buildSummary_();
-  SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(sheet);
+  buildDashboard_();
+  // Tab order: Enquiries, Dashboard, Summary; the Chart data helper stays hidden at the end
+  [SHEET_NAME, DASHBOARD_NAME, SUMMARY_NAME].forEach(function (n, i) {
+    ss.setActiveSheet(ss.getSheetByName(n));
+    ss.moveActiveSheet(i + 1);
+  });
+  ss.setActiveSheet(ss.getSheetByName(DASHBOARD_NAME));
+  ss.getSheetByName(DATA_NAME).hideSheet();
 }
 
 function formatSheet_(sheet) {
@@ -149,35 +164,184 @@ function formatSheet_(sheet) {
   sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 2), COLUMNS.length).createFilter();
 }
 
+var E_ = "'" + SHEET_NAME + "'!"; // prefix for formulas that read the Enquiries tab
+
+/** Hidden helper tab that feeds the Dashboard charts: last 12 months, last 30 days, status and service counts. */
+function buildChartData_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var d = ss.getSheetByName(DATA_NAME) || ss.insertSheet(DATA_NAME);
+  d.clear();
+  var A = E_ + 'A2:A', B = E_ + 'B2:B', G = E_ + 'G2:G';
+
+  var months = [['Month', 'Enquiries', 'Start']];
+  for (var i = 1; i <= 12; i++) {
+    var r = i + 1;
+    months.push(['=TEXT(C' + r + ',"mmm yy")',
+      '=COUNTIFS(' + A + ',">="&C' + r + ',' + A + ',"<"&EDATE(C' + r + ',1))',
+      '=EDATE(EOMONTH(TODAY(),-1)+1,' + (i - 12) + ')']);
+  }
+  d.getRange(1, 1, months.length, 3).setValues(months);
+
+  var days = [['Day', 'Enquiries', 'Date']];
+  for (var j = 1; j <= 30; j++) {
+    var q = j + 1;
+    days.push(['=TEXT(G' + q + ',"dd mmm")', '=COUNTIFS(' + A + ',">="&G' + q + ',' + A + ',"<"&G' + q + '+1)', '=TODAY()-' + (30 - j)]);
+  }
+  d.getRange(1, 5, days.length, 3).setValues(days);
+
+  var status = [['Status', 'Enquiries']].concat(STATUSES.map(function (st) { return [st, '=COUNTIF(' + B + ',"' + st + '")']; }));
+  d.getRange(1, 9, status.length, 2).setValues(status);
+
+  var svc = [['Service', 'Enquiries']].concat(SERVICES.map(function (sv) { return [sv, '=COUNTIF(' + G + ',"' + sv.replace(/"/g, '""') + '")']; }));
+  d.getRange(1, 12, svc.length, 2).setValues(svc);
+
+  d.getRange('C:C').setNumberFormat('dd mmm yyyy');
+  d.getRange('G:G').setNumberFormat('dd mmm yyyy');
+  d.getRange(1, 1, 1, 13).setFontWeight('bold');
+  d.hideSheet();
+}
+
+/** Summary tab: headline tiles, status and service tables with in-cell bars, last 6 months, latest enquiries. */
 function buildSummary_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sum = ss.getSheetByName(SUMMARY_NAME) || ss.insertSheet(SUMMARY_NAME);
   sum.clear();
-  var e = "'" + SHEET_NAME + "'!";
-  var rows = [['BIOTOX enquiries: summary', ''], ['', ''], ['Total enquiries', '=COUNTA(' + e + 'A2:A)'],
-    ['This month', '=COUNTIFS(' + e + 'A2:A,">="&EOMONTH(TODAY(),-1)+1,' + e + 'A2:A,"<"&EOMONTH(TODAY(),0)+1)'],
-    ['Waiting for reply (New)', '=COUNTIF(' + e + 'B2:B,"New")'], ['', ''], ['By status', 'Count']];
-  STATUSES.forEach(function (s) { rows.push([s, '=COUNTIF(' + e + 'B2:B,"' + s + '")']); });
-  rows.push(['', ''], ['By service', 'Count']);
-  SERVICES.forEach(function (s) { rows.push([s, '=COUNTIF(' + e + 'G2:G,"' + s.replace(/"/g, '""') + '")']); });
-  sum.getRange(1, 1, rows.length, 2).setValues(rows);
+  sum.getRange(1, 1, sum.getMaxRows(), sum.getMaxColumns()).breakApart();
+  sum.setHiddenGridlines(true);
+  var A = E_ + 'A2:A', B = E_ + 'B2:B', G = E_ + 'G2:G';
+  [200, 90, 80, 150, 24, 260, 90, 80, 150].forEach(function (w, i) { sum.setColumnWidth(i + 1, w); });
 
-  var monthRow = rows.length + 2;
-  sum.getRange(monthRow, 1, 1, 2).setValues([['By month', 'Count']]);
-  sum.getRange(monthRow + 1, 1).setFormula(
-    '=IFERROR(QUERY({ARRAYFORMULA(IF(' + e + 'A2:A="",,TEXT(' + e + 'A2:A,"yyyy-mm"))),' + e + 'C2:C},' +
-    '"select Col1, count(Col2) where Col1 is not null group by Col1 order by Col1 desc label count(Col2) \'\'",0),"No enquiries yet")'
-  );
+  // Title
+  sum.getRange('A1:I1').merge().setValue('BIOTOX enquiries')
+    .setFontSize(20).setFontWeight('bold').setFontColor(INK);
+  sum.getRange('A2:I2').merge().setValue('Updates automatically from the Enquiries tab. Open the Dashboard tab for charts.')
+    .setFontColor(MUTED).setFontSize(10);
+  sum.setRowHeight(1, 40);
 
-  sum.setColumnWidth(1, 260);
-  sum.setColumnWidth(2, 110);
-  sum.getRange('A1').setFontSize(14).setFontWeight('bold').setFontColor('#05201E');
-  sum.getRange('A3:B5').setFontWeight('bold');
-  [7, 7 + STATUSES.length + 2, monthRow].forEach(function (r) {
-    sum.getRange(r, 1, 1, 2).setBackground('#05201E').setFontColor('#FFFFFF').setFontWeight('bold');
+  // Headline tiles: label row 4, value row 5 (A, B:C, D, F, G:H, I)
+  var tiles = [
+    ['A', 'Total enquiries', '=COUNTA(' + A + ')', '0'],
+    ['B4:C4', 'This month', '=COUNTIFS(' + A + ',">="&EOMONTH(TODAY(),-1)+1,' + A + ',"<"&EOMONTH(TODAY(),0)+1)', '0'],
+    ['D', 'Last 7 days', '=COUNTIFS(' + A + ',">="&TODAY()-6)', '0'],
+    ['F', 'Waiting for reply', '=COUNTIF(' + B + ',"New")', '0'],
+    ['G4:H4', 'Won', '=COUNTIF(' + B + ',"Won")', '0'],
+    ['I', 'Win rate (won ÷ closed)', '=IFERROR(COUNTIF(' + B + ',"Won")/(COUNTIF(' + B + ',"Won")+COUNTIF(' + B + ',"Lost")),0)', '0%'],
+  ];
+  tiles.forEach(function (t) {
+    var label = t[0].indexOf(':') > -1 ? sum.getRange(t[0]) : sum.getRange(t[0] + '4');
+    var value = t[0].indexOf(':') > -1 ? sum.getRange(t[0].replace(/4/g, '5')) : sum.getRange(t[0] + '5');
+    if (t[0].indexOf(':') > -1) { label.merge(); value.merge(); }
+    label.setValue(t[1].toUpperCase()).setFontSize(8).setFontWeight('bold').setFontColor(MUTED).setBackground(TINT).setVerticalAlignment('bottom');
+    value.setValue(t[2]).setNumberFormat(t[3]).setFontSize(24).setFontWeight('bold').setFontColor(TEAL).setBackground(TINT)
+      .setHorizontalAlignment('left').setVerticalAlignment('top');
   });
-  sum.getRange('B:B').setHorizontalAlignment('right');
-  sum.setFrozenRows(1);
+  sum.setRowHeight(4, 26); sum.setRowHeight(5, 44);
+  sum.getRange('F5').setFontColor('#B45309'); // waiting for reply stands out
+
+  var header = function (range, labels) {
+    sum.getRange(range).setValues([labels]).setBackground(INK).setFontColor('#FFFFFF').setFontWeight('bold');
+  };
+  var bar = function (cell, maxRange, colour) {
+    return '=SPARKLINE(' + cell + ',{"charttype","bar";"max",MAX(1,MAX(' + maxRange + '));"color1","' + colour + '"})';
+  };
+
+  // By status (A:D, rows 7-13)
+  header('A7:D7', ['By status', 'Count', 'Share', '']);
+  STATUSES.forEach(function (st, i) {
+    var r = 8 + i;
+    sum.getRange(r, 1, 1, 4).setValues([[st, '=COUNTIF(' + B + ',"' + st + '")', '=IFERROR(B' + r + '/$A$5,0)', bar('B' + r, '$B$8:$B$13', STATUS_CHART[i])]]);
+  });
+  sum.getRange('C8:C13').setNumberFormat('0%');
+
+  // By service (F:I, rows 7-18)
+  header('F7:I7', ['By service', 'Count', 'Share', '']);
+  SERVICES.forEach(function (sv, i) {
+    var r = 8 + i;
+    sum.getRange(r, 6, 1, 4).setValues([[sv, '=COUNTIF(' + G + ',"' + sv.replace(/"/g, '""') + '")', '=IFERROR(G' + r + '/$A$5,0)', bar('G' + r, '$G$8:$G$18', TEAL)]]);
+  });
+  sum.getRange('H8:H18').setNumberFormat('0%');
+
+  // Last 6 months (A:D, rows 16-22), from the hidden Chart data tab
+  header('A16:D16', ['Last 6 months', 'Count', '', '']);
+  for (var m = 0; m < 6; m++) {
+    var r = 17 + m, src = 13 - m; // newest first
+    sum.getRange(r, 1, 1, 4).setValues([["='" + DATA_NAME + "'!A" + src, "='" + DATA_NAME + "'!B" + src, '', bar('B' + r, '$B$17:$B$22', TEAL)]]);
+  }
+
+  // Latest 5 enquiries (A:I, rows 25-30)
+  header('A25:I25', ['Latest enquiries', '', '', '', '', '', '', '', '']);
+  sum.getRange('A26:D26').setValues([['Received', 'Status', '', 'Name']]);
+  sum.getRange('F26:G26').setValues([['Service', '']]);
+  sum.getRange('A26:I26').setFontWeight('bold').setFontColor(MUTED).setFontSize(9);
+  sum.getRange('A27').setFormula('=IFERROR(QUERY(' + E_ + 'A2:B,"select A, B where A is not null order by A desc limit 5",0),"No enquiries yet")');
+  sum.getRange('D27').setFormula('=IFERROR(QUERY({' + E_ + 'A2:A,' + E_ + 'C2:C},"select Col2 where Col1 is not null order by Col1 desc limit 5",0),"")');
+  sum.getRange('F27').setFormula('=IFERROR(QUERY({' + E_ + 'A2:A,' + E_ + 'G2:G},"select Col2 where Col1 is not null order by Col1 desc limit 5",0),"")');
+  sum.getRange('A27:A31').setNumberFormat('dd mmm yyyy, hh:mm am/pm').setHorizontalAlignment('left');
+
+  // Common styling
+  sum.getRange('B8:B22').setHorizontalAlignment('right');
+  sum.getRange('G8:G18').setHorizontalAlignment('right');
+  [['A8:D13'], ['F8:I18'], ['A17:D22'], ['A27:I31']].forEach(function (r) {
+    sum.getRange(r[0]).setBorder(null, null, true, null, null, true, LINE, SpreadsheetApp.BorderStyle.SOLID);
+  });
+  sum.getRange('A1:I40').setFontFamily('Arial').setVerticalAlignment('middle');
+  sum.getRange('A4:I5').setVerticalAlignment('bottom');
+  sum.getRange('A5:I5').setVerticalAlignment('top');
+  sum.setFrozenRows(0);
+}
+
+/** Dashboard tab: headline numbers and four charts. */
+function buildDashboard_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var dash = ss.getSheetByName(DASHBOARD_NAME) || ss.insertSheet(DASHBOARD_NAME);
+  dash.getCharts().forEach(function (c) { dash.removeChart(c); });
+  dash.clear();
+  dash.getRange(1, 1, dash.getMaxRows(), dash.getMaxColumns()).breakApart();
+  dash.setHiddenGridlines(true);
+  for (var c = 1; c <= 12; c++) dash.setColumnWidth(c, 100);
+  var data = ss.getSheetByName(DATA_NAME);
+  var S = "'" + SUMMARY_NAME + "'!";
+
+  dash.getRange('A1:L1').merge().setValue('BIOTOX enquiries dashboard').setFontSize(20).setFontWeight('bold').setFontColor(INK);
+  dash.getRange('A2:L2').merge().setValue('Live charts from the Enquiries tab. Change a Status there and these update automatically.').setFontColor(MUTED).setFontSize(10);
+  dash.setRowHeight(1, 40);
+
+  // Headline strip: 6 tiles, 2 columns each
+  var kpis = [['Total', S + 'A5', '0'], ['This month', S + 'B5', '0'], ['Last 7 days', S + 'D5', '0'],
+    ['Waiting for reply', S + 'F5', '0'], ['Won', S + 'G5', '0'], ['Win rate', S + 'I5', '0%']];
+  kpis.forEach(function (k, i) {
+    var col = 1 + i * 2;
+    dash.getRange(4, col, 1, 2).merge().setValue(k[0].toUpperCase()).setFontSize(8).setFontWeight('bold').setFontColor(MUTED).setBackground(TINT);
+    dash.getRange(5, col, 1, 2).merge().setFormula('=' + k[1]).setNumberFormat(k[2]).setFontSize(22).setFontWeight('bold')
+      .setFontColor(k[0] === 'Waiting for reply' ? '#B45309' : TEAL).setBackground(TINT).setHorizontalAlignment('left');
+  });
+  dash.setRowHeight(4, 24); dash.setRowHeight(5, 42);
+  dash.getRange('A1:L5').setFontFamily('Arial');
+
+  var base = function (type, range, title) {
+    return dash.newChart().setChartType(type).addRange(range).setNumHeaders(1)
+      .setOption('title', title).setOption('titleTextStyle', { color: INK, fontSize: 14, bold: true })
+      .setOption('backgroundColor', '#FFFFFF').setOption('width', 590).setOption('height', 330)
+      .setOption('legend', { position: 'none' }).setOption('fontName', 'Arial');
+  };
+
+  // Row 7: status donut (left), monthly columns (right)
+  dash.insertChart(base(Charts.ChartType.PIE, data.getRange('I1:J7'), 'Enquiries by status')
+    .setOption('pieHole', 0.55).setOption('colors', STATUS_CHART)
+    .setOption('legend', { position: 'right', textStyle: { color: MUTED } })
+    .setOption('pieSliceText', 'value').setPosition(7, 1, 0, 0).build());
+  dash.insertChart(base(Charts.ChartType.COLUMN, data.getRange('A1:B13'), 'Enquiries per month (last 12 months)')
+    .setOption('colors', [TEAL]).setOption('vAxis', { minValue: 0, format: '0', gridlines: { color: LINE } })
+    .setPosition(7, 7, 0, 0).build());
+
+  // Row 25: services bar (left), last 30 days area (right)
+  dash.insertChart(base(Charts.ChartType.BAR, data.getRange('L1:M12'), 'Which services people ask about')
+    .setOption('colors', ['#0E7490']).setOption('hAxis', { minValue: 0, format: '0', gridlines: { color: LINE } })
+    .setPosition(25, 1, 0, 0).build());
+  dash.insertChart(base(Charts.ChartType.AREA, data.getRange('E1:F31'), 'Daily enquiries (last 30 days)')
+    .setOption('colors', [TEAL]).setOption('areaOpacity', 0.18).setOption('lineWidth', 2)
+    .setOption('vAxis', { minValue: 0, format: '0', gridlines: { color: LINE } }).setOption('hAxis', { showTextEvery: 5 })
+    .setPosition(25, 7, 0, 0).build());
 }
 
 function reply_(obj) {
