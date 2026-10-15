@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import PageHero from '@/components/PageHero';
+import CtaBand from '@/components/CtaBand';
 import ContactSection from '@/components/ContactSection';
 import JsonLd from '@/components/JsonLd';
 import { bepSteps, berSteps } from '@/lib/data';
@@ -31,33 +32,20 @@ export default function ProcessPage() {
     <>
       <JsonLd schema={breadcrumbSchema} />
 
+      <PageHero
+        eyebrow="Our Process"
+        title={<>BEP + BER <em>Solutions</em> for Medical Devices</>}
+        lead="End-to-end biological safety compliance as per ISO 10993 & global regulations — from planning to final submission."
+        img="https://images.pexels.com/photos/7550538/pexels-photo-7550538.jpeg?auto=compress&cs=tinysrgb&w=1800"
+        crumbs={[{ name: 'BEP + BER' }]}
+        chips={['ISO 10993-1:2025', 'ISO 10993-17', 'ISO 10993-18', 'ISO 14971']}
+      />
+
       <section className="section alt" id="process">
         <div className="container">
-          <div className="section-head center reveal in">
-            <div className="eyebrow" style={{ justifyContent: 'center', width: '100%' }}>
-              Our Process
-            </div>
-            <h1>
-              BEP + BER <em>Solutions</em> for Medical Devices
-            </h1>
-            <p>
-              End-to-end biological safety compliance as per ISO 10993 &amp; global regulations — from planning to final submission.
-            </p>
-          </div>
-
-          <div className="process-banner reveal in">
-            <Image
-              src="https://images.pexels.com/photos/7550538/pexels-photo-7550538.jpeg?auto=compress&cs=tinysrgb&w=1200"
-              alt="Regulatory documentation and biological safety evaluation review"
-              width={1200}
-              height={500}
-              priority
-              style={{ width: '100%', height: 'auto', borderRadius: 'var(--radius)' }}
-            />
-          </div>
-
+          <div className="track-wrap">
           {/* BEP Track */}
-          <div className="process-track reveal in">
+          <div className="process-track" data-reveal="left">
             <div className="process-track-head">
               <h2>Biological Evaluation Plan</h2>
               <span className="stage-tag">BEP</span>
@@ -66,8 +54,9 @@ export default function ProcessPage() {
               Your roadmap for biological safety — a complete biocompatibility strategy defining materials, device categorisation, and required testing per ISO 10993-1:2025.
             </p>
             <div className="timeline" id="bepTimeline">
+              <span className="fill" aria-hidden="true" />
               {bepSteps.map((step, idx) => (
-                <div key={idx} className="t-step reveal in">
+                <div key={idx} className="t-step">
                   <div className="t-num">{String(idx + 1).padStart(2, '0')}</div>
                   <div className="t-body">
                     <h3>{step.title}</h3>
@@ -85,7 +74,7 @@ export default function ProcessPage() {
           </div>
 
           {/* BER Track */}
-          <div className="process-track reveal in" style={{ marginBottom: 0 }}>
+          <div className="process-track" data-reveal="right">
             <div className="process-track-head">
               <h2>Biological Evaluation Report</h2>
               <span className="stage-tag ber">BER</span>
@@ -94,8 +83,9 @@ export default function ProcessPage() {
               Regulator-ready biological safety — the final biological safety assessment submitted to regulatory bodies after characterisation and testing is complete.
             </p>
             <div className="timeline" id="berTimeline">
+              <span className="fill" aria-hidden="true" />
               {berSteps.map((step, idx) => (
-                <div key={idx} className="t-step reveal in">
+                <div key={idx} className="t-step">
                   <div className="t-num">{String(idx + 1).padStart(2, '0')}</div>
                   <div className="t-body">
                     <h3>{step.title}</h3>
@@ -111,9 +101,11 @@ export default function ProcessPage() {
               </p>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
+      <CtaBand title="Start with a Biological Evaluation Plan" />
       <ContactSection />
     </>
   );

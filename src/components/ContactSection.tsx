@@ -1,22 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { siteConfig } from '@/lib/seo-config';
+import { services } from '@/lib/data';
 
 interface ContactSectionProps {
   id?: string;
-  isMainPage?: boolean;
+  defaultService?: string;
 }
 
-export default function ContactSection({ id = 'contact-cta-section', isMainPage = false }: ContactSectionProps) {
+export default function ContactSection({ id = 'contact-cta-section', defaultService = '' }: ContactSectionProps) {
   const [formData, setFormData] = useState({
     fullName: '',
     emailAddress: '',
     phoneNumber: '',
     companyName: '',
-    serviceRequired: '',
+    serviceRequired: defaultService,
     message: '',
+    website: '',
   });
+  const [consent, setConsent] = useState(false);
+
+  // Pre-select a service from ?service=… (links from service pages).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('service');
+    if (q && services.some((s) => s.title === q)) setFormData((prev) => ({ ...prev, serviceRequired: q }));
+  }, []);
 
   const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' | '' }>({
     message: '',
@@ -34,6 +44,7 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
 
   const mailtoFallback = () => {
     const subject = encodeURIComponent(`New Enquiry — ${formData.serviceRequired || 'Medical Device Toxicology'}`);
+    if (formData.website) return;
     const bodyLines = [
       `Name: ${formData.fullName}`,
       `Email: ${formData.emailAddress}`,
@@ -60,10 +71,11 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
       !formData.emailAddress ||
       !formData.phoneNumber ||
       !formData.serviceRequired ||
-      !formData.message
+      !formData.message ||
+      !consent
     ) {
       setStatus({
-        message: 'Please fill in all required fields.',
+        message: consent ? 'Please fill in all required fields.' : 'Please fill in all required fields and accept the privacy policy.',
         type: 'error',
       });
       return;
@@ -96,7 +108,9 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
           companyName: '',
           serviceRequired: '',
           message: '',
+          website: '',
         });
+        setConsent(false);
       } else {
         mailtoFallback();
       }
@@ -110,10 +124,8 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
   return (
     <section className="section" id={id}>
       <div className="container">
-        <div className="section-head center reveal in">
-          <div className="eyebrow" style={{ justifyContent: 'center', width: '100%' }}>
-            Get In Touch
-          </div>
+        <div className="section-head center" data-reveal="up">
+          <div className="eyebrow">Get In Touch</div>
           <h2>
             Do You Have an <em>Enquiry?</em>
           </h2>
@@ -122,9 +134,9 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
           </p>
         </div>
 
-        <div className="contact-grid reveal in">
+        <div className="contact-grid">
           {/* Left: contact info cards */}
-          <div className="contact-info-list">
+          <div className="contact-info-list" data-reveal="left">
             <div className="info-card">
               <div className="info-icon icon-blue">
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -222,7 +234,9 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
           </div>
 
           {/* Right: Contact Form */}
-          <div className="contact-form-wrap">
+          <div className="contact-form-wrap" data-reveal="right">
+            <h3>Tell us about your device</h3>
+            <p>Share a few details and a certified toxicologist will get back to you, usually within 2 hours on business days.</p>
             <form className="enquiryForm" onSubmit={handleSubmit} noValidate>
               <div className="form-row">
                 <div className="form-group">
@@ -291,14 +305,12 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
                   <option value="" disabled>
                     Select a service...
                   </option>
-                  <option value="Biocompatibility Evaluation">Biocompatibility Evaluation</option>
-                  <option value="BEP / BER">BEP / BER Preparation</option>
-                  <option value="Toxicological Risk Assessment">Toxicological Risk Assessment</option>
-                  <option value="Regulatory Consulting">Regulatory Consulting</option>
-                  <option value="In-silico Safety Assessment">In-silico Safety Assessment</option>
-                  <option value="ISO 18562 Gas Pathway">ISO 18562 Gas Pathway</option>
-                  <option value="ISO 7405 Dental Devices">ISO 7405 Dental Devices</option>
-                  <option value="Other">Other</option>
+                  {services.map((svc) => (
+                    <option key={svc.slug} value={svc.title}>
+                      {svc.title}
+                    </option>
+                  ))}
+                  <option value="Other">Other / Not sure yet</option>
                 </select>
               </div>
 
@@ -315,9 +327,22 @@ export default function ContactSection({ id = 'contact-cta-section', isMainPage 
                 />
               </div>
 
-              <button type="submit" className="btn form-submit-btn" disabled={isSubmitting}>
+              <div className="hp-field" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={handleChange} />
+              </div>
+
+              <label className="form-consent">
+                <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+                <span>
+                  I agree that BIOTOX by MedReg may use these details to respond to my enquiry, as described in the{' '}
+                  <Link href="/privacy-policy">privacy policy</Link>. We sign NDAs on request.
+                </span>
+              </label>
+
+              <button type="submit" className="btn btn-primary form-submit-btn" disabled={isSubmitting}>
                 {isSubmitting ? 'Sending...' : 'Send Message'}
-                <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="m22 2-7 20-4-9-9-4Z" />
                   <path d="M22 2 11 13" />
                 </svg>

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import ContactSection from '@/components/ContactSection';
+import PageHero from '@/components/PageHero';
+import CtaBand from '@/components/CtaBand';
 import JsonLd from '@/components/JsonLd';
 import { advantages, ICONS } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
@@ -31,33 +33,25 @@ export default function AdvantagesPage() {
     <>
       <JsonLd schema={breadcrumbSchema} />
 
+      <PageHero
+        eyebrow="Why Choose Us"
+        title={<>Key Advantages of <em>BIOTOX by MedReg</em></>}
+        lead="Expert guidance at every step — from first documentation to final submission worldwide."
+        img="https://images.pexels.com/photos/8978610/pexels-photo-8978610.jpeg?auto=compress&cs=tinysrgb&w=1800"
+        crumbs={[{ name: 'Why Us' }]}
+      />
+
       <section className="section" id="advantages">
-        <div className="blob-wrap" aria-hidden="true">
-          <div className="blob blob-teal" style={{ width: '380px', height: '380px', top: '-100px', right: '-120px' }} />
-        </div>
-
         <div className="container">
-          <div className="section-head reveal in">
-            <div className="eyebrow">Why Choose Us</div>
-            <h1>
-              Key Advantages of <em>BIOTOX by MedReg</em>
-            </h1>
-            <p>
-              Expert guidance at every step — from first documentation to final submission worldwide.
-            </p>
-          </div>
-
           <div className="grid grid-3" id="advantagesGrid">
             {advantages.map((item, idx) => (
-              <div key={idx} className="card reveal in">
+              <div key={idx} className="card" data-reveal="up" style={{ ['--d' as string]: (idx % 3) * 90 }}>
                 <div className="card-img-wrap">
                   <Image
                     src={item.img}
                     alt={item.title}
-                    width={400}
-                    height={220}
-                    className="card-img"
-                    loading="lazy"
+                    fill
+                    sizes="(max-width:640px) 100vw, (max-width:980px) 50vw, 400px"
                   />
                 </div>
                 <div className="card-body">
@@ -78,6 +72,7 @@ export default function AdvantagesPage() {
         </div>
       </section>
 
+      <CtaBand />
       <ContactSection />
     </>
   );

@@ -1,53 +1,27 @@
 import { MetadataRoute } from 'next';
 import { siteConfig } from '@/lib/seo-config';
+import { services } from '@/lib/data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const currentDate = new Date();
+  const lastModified = new Date();
+  const page = (path: string, priority: number, changeFrequency: 'weekly' | 'monthly' | 'yearly' = 'monthly') => ({
+    url: `${siteConfig.url}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  });
 
-  const routes = [
-    {
-      url: `${siteConfig.url}/`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 1.0,
-    },
-    {
-      url: `${siteConfig.url}/expertise`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${siteConfig.url}/process`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${siteConfig.url}/advantages`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteConfig.url}/devices`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteConfig.url}/standards`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteConfig.url}/contact`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    },
+  return [
+    page('/', 1.0, 'weekly'),
+    page('/expertise', 0.9, 'weekly'),
+    ...services.map((s) => page(`/expertise/${s.slug}`, 0.9)),
+    page('/process', 0.9),
+    page('/about', 0.8),
+    page('/advantages', 0.8),
+    page('/devices', 0.8),
+    page('/standards', 0.8),
+    page('/contact', 0.9),
+    page('/privacy-policy', 0.3, 'yearly'),
+    page('/terms', 0.3, 'yearly'),
   ];
-
-  return routes;
 }

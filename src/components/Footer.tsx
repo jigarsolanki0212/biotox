@@ -1,51 +1,76 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Icon from './Icon';
+import { services } from '@/lib/data';
+import { serviceHref } from '@/lib/service-details';
+import { siteConfig } from '@/lib/seo-config';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer>
+    <footer className="site-footer">
       <div className="container">
+        <div className="footer-top">
+          <h2>Let&apos;s decode the regulations together.</h2>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Link href="/contact" className="btn btn-primary">
+              Start a project <Icon name="arrow" />
+            </Link>
+            <a href={siteConfig.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-glass">
+              WhatsApp an expert
+            </a>
+          </div>
+        </div>
+
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link href="/" className="logo" style={{ color: '#fff' }} aria-label="BIOTOX by MedReg">
-              <Image
-                src="/images/logo-full.png"
-                alt="BIOTOX by MedReg"
-                width={200}
-                height={46}
-                className="logo-img"
-                id="footerLogo"
-                style={{ filter: 'brightness(0) invert(1) opacity(0.92)' }}
-              />
+            <Link href="/" aria-label="BIOTOX by MedReg home">
+              <Image src="/images/logo-full.png" alt="BIOTOX by MedReg" width={150} height={55} className="logo-img" />
             </Link>
-            <p>
-              Let&apos;s decode the regulations together — expert toxicology solutions for safe, compliant, successful products.
-            </p>
+            <p>Expert toxicology solutions for safe, compliant, successful products. Science · Safety · Compliance.</p>
           </div>
           <div className="footer-col">
-            <h5>Navigate</h5>
-            <Link href="/expertise">Expertise</Link>
-            <Link href="/process">BEP + BER</Link>
-            <Link href="/advantages">Why Us</Link>
-            <Link href="/devices">Devices</Link>
-            <Link href="/standards">Standards</Link>
+            <h5>Services</h5>
+            {services.slice(0, 5).map((s) => (
+              <Link key={s.slug} href={serviceHref(s.slug)}>{s.title}</Link>
+            ))}
           </div>
           <div className="footer-col">
-            <h5>Contact</h5>
-            <a href="mailto:enquiry@medregbiotox.com">enquiry@medregbiotox.com</a>
-            <a href="tel:+918866461989">+91 88664 61989</a>
-            <a href="tel:+919409406215">+91 94094 06215</a>
+            <h5>Specialised</h5>
+            {services.slice(5).map((s) => (
+              <Link key={s.slug} href={serviceHref(s.slug)}>{s.title}</Link>
+            ))}
           </div>
           <div className="footer-col">
             <h5>Company</h5>
-            <Link href="/contact">Enquire Now</Link>
+            <Link href="/about">About Us</Link>
+            <Link href="/process">BEP + BER Process</Link>
+            <Link href="/advantages">Why Choose Us</Link>
+            <Link href="/devices">Devices We Cover</Link>
+            <Link href="/standards">Standards</Link>
+            <Link href="/contact">Contact</Link>
+          </div>
+          <div className="footer-col">
+            <h5>Get in touch</h5>
+            <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
+            <a href={`tel:${siteConfig.contact.phonePrimaryRaw}`}>{siteConfig.contact.phonePrimary}</a>
+            <a href={`tel:${siteConfig.contact.phoneSecondaryRaw}`}>{siteConfig.contact.phoneSecondary}</a>
+            <a href={siteConfig.contact.address.mapsUrl} target="_blank" rel="noopener noreferrer">
+              {siteConfig.contact.address.street}, {siteConfig.contact.address.city} {siteConfig.contact.address.postalCode}
+            </a>
           </div>
         </div>
+
+        <div className="footer-word" aria-hidden="true">BIOTOX</div>
+
         <div className="footer-bottom">
-          <span>Science · Safety · Compliance</span>
-          <span id="year">© {currentYear} BIOTOX by MedReg. All rights reserved.</span>
+          <span>© {currentYear} BIOTOX by MedReg. All rights reserved.</span>
+          <nav aria-label="Legal">
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Use</Link>
+            <Link href="/sitemap.xml">Sitemap</Link>
+          </nav>
         </div>
       </div>
     </footer>

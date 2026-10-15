@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ContactSection from '@/components/ContactSection';
+import PageHero from '@/components/PageHero';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig, getBreadcrumbSchema } from '@/lib/seo-config';
 
@@ -53,7 +54,14 @@ export default function ContactPage() {
       <JsonLd schema={breadcrumbSchema} />
       <JsonLd schema={contactPageSchema} />
 
-      <ContactSection id="contact" isMainPage={true} />
+      <PageHero
+        eyebrow="Contact"
+        title={<>Do You Have an <em>Enquiry?</em></>}
+        lead="We are here to support your safety, compliance & success. Reach out to our certified toxicology experts — direct expert response within 2 hours."
+        img="https://images.pexels.com/photos/8730987/pexels-photo-8730987.jpeg?auto=compress&cs=tinysrgb&w=1800"
+        crumbs={[{ name: 'Contact' }]}
+      />
+      <ContactSection id="contact" />
     </>
   );
 }

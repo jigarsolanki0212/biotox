@@ -4,6 +4,8 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingActions from '@/components/FloatingActions';
+import Motion from '@/components/Motion';
+import PageTransition from '@/components/PageTransition';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig, getOrganizationSchema, getWebsiteSchema } from '@/lib/seo-config';
 
@@ -24,7 +26,7 @@ const inter = Inter({
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+    { media: '(prefers-color-scheme: dark)', color: '#070D1C' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -111,6 +113,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              document.documentElement.classList.add('js');
               try {
                 var theme = localStorage.getItem('biotoxTheme');
                 if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -126,8 +129,11 @@ export default function RootLayout({
         <JsonLd schema={websiteSchema} />
       </head>
       <body suppressHydrationWarning>
+        <Motion />
         <Header />
-        <main id="mainContent">{children}</main>
+        <main id="mainContent">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <Footer />
         <FloatingActions />
       </body>

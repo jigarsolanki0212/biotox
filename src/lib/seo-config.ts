@@ -67,7 +67,7 @@ export function getOrganizationSchema() {
     "@type": "MedicalBusiness",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
-    legalName: "BIOTOX by MedReg Solutions",
+    legalName: "MedReg BioTox LLP",
     url: siteConfig.url,
     logo: `${siteConfig.url}/images/logo-full.png`,
     image: `${siteConfig.url}/images/og-image.png`,
@@ -104,10 +104,12 @@ export function getOrganizationSchema() {
         availableLanguage: ["English", "Hindi", "Gujarati"],
       },
     ],
-    sameAs: [
-      "https://www.medreg.in",
-      siteConfig.contact.whatsappUrl,
-    ],
+    sameAs: ["https://www.medreg.in"],
+    parentOrganization: {
+      "@type": "Organization",
+      name: "MedReg Consultancy LLP",
+      url: "https://www.medreg.in",
+    },
     priceRange: "$$$",
     knowsAbout: [
       "Medical Device Biocompatibility",
@@ -184,5 +186,20 @@ export function getServiceSchema(services: { title: string; desc: string; tag: s
         "@id": `${siteConfig.url}/#organization`,
       },
     })),
+  };
+}
+
+export function getServiceDetailSchema(s: { slug: string; title: string; desc: string; tag: string; img: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${siteConfig.url}/expertise/${s.slug}#service`,
+    name: s.title,
+    description: s.desc,
+    serviceType: s.tag,
+    url: `${siteConfig.url}/expertise/${s.slug}`,
+    image: s.img,
+    areaServed: ["Worldwide", "IN", "US", "EU", "GB"],
+    provider: { "@id": `${siteConfig.url}/#organization` },
   };
 }

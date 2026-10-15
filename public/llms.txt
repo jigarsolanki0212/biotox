@@ -29,6 +29,26 @@
 5. **Genotoxicity Prediction**: QSAR-based genotoxicity evaluations with robust regulatory justifications accepted by FDA, EU MDR, and CDSCO.
 6. **Global Regulatory Compliance & Risk Management (ISO 14971)**: Multi-market alignment across US, Europe, India, Gulf, and ASEAN.
 
+## Key Pages
+- [Home](https://medregbiotox.com/)
+- [About](https://medregbiotox.com/about)
+- [All services](https://medregbiotox.com/expertise)
+- [Biocompatibility Evaluation](https://medregbiotox.com/expertise/biocompatibility-evaluation)
+- [BEP / BER Preparation & Review](https://medregbiotox.com/expertise/bep-ber-preparation)
+- [Toxicological Risk Assessment](https://medregbiotox.com/expertise/toxicological-risk-assessment)
+- [In-silico Safety Assessment](https://medregbiotox.com/expertise/in-silico-safety-assessment)
+- [QSAR Analysis](https://medregbiotox.com/expertise/qsar-analysis)
+- [Genotoxicity Prediction](https://medregbiotox.com/expertise/genotoxicity-prediction)
+- [Global Regulatory Compliance](https://medregbiotox.com/expertise/global-regulatory-compliance)
+- [Risk Assessment & Management](https://medregbiotox.com/expertise/risk-management-iso-14971)
+- [ISO 18562-1:2024 Compliance](https://medregbiotox.com/expertise/iso-18562-breathing-gas-pathway)
+- [ISO 7405:2025 Compliance](https://medregbiotox.com/expertise/iso-7405-dental-devices)
+- [BEP + BER process](https://medregbiotox.com/process)
+- [Why choose us](https://medregbiotox.com/advantages)
+- [Device categories](https://medregbiotox.com/devices)
+- [Standards](https://medregbiotox.com/standards)
+- [Contact](https://medregbiotox.com/contact)
+
 ## Frequently Asked Questions (FAQ)
 ### Q: What is a Biological Evaluation Plan (BEP)?
 A: A BEP is a strategic roadmap defining device materials, categorization, contact duration, endpoint mapping, worst-case sample selection, and scientific justifications for test waivers per ISO 10993-1:2025.

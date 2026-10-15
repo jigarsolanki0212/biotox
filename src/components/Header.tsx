@@ -1,103 +1,116 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+import Icon from './Icon';
+import { services } from '@/lib/data';
+import { serviceHref } from '@/lib/service-details';
+import { siteConfig } from '@/lib/seo-config';
+
+const navLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/process', label: 'BEP + BER' },
+  { href: '/advantages', label: 'Why Us' },
+  { href: '/devices', label: 'Devices' },
+  { href: '/standards', label: 'Standards' },
+];
+
+// Pages that open with a dark photo hero, where the header starts in its light-on-dark style.
+const DARK_HERO = ['/about', '/expertise', '/process', '/advantages', '/devices', '/standards', '/contact', '/privacy-policy', '/terms'];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const lastY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const y = window.scrollY;
+      setIsScrolled(y > 20);
+      setHidden(y > 500 && y > lastY.current + 4);
+      if (y < lastY.current - 4 || y < 500) setHidden(false);
+      lastY.current = y;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile nav on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  const navLinks = [
-    { href: '/expertise', label: 'Expertise' },
-    { href: '/process', label: 'BEP + BER' },
-    { href: '/advantages', label: 'Why Us' },
-    { href: '/devices', label: 'Devices' },
-    { href: '/standards', label: 'Standards' },
-  ];
+  useEffect(() => {
+    document.documentElement.style.overflow = mobileMenuOpen ? 'hidden' : '';
+  }, [mobileMenuOpen]);
+
+  const onDark = DARK_HERO.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <>
-      <header id="siteHeader" className={isScrolled ? 'scrolled' : ''}>
-        <div className="container nav-wrap">
-          <Link href="/" className="logo" aria-label="BIOTOX by MedReg Home">
-            <Image
-              src="/images/logo-full.png"
-              alt="BIOTOX by MedReg"
-              width={220}
-              height={50}
-              priority
-              className="logo-img"
-              id="headerLogo"
-            />
+      <a href="#mainContent" className="skip-link">Skip to content</a>
+      <header
+        className={`site-header ${isScrolled ? 'scrolled' : ''} ${hidden && !mobileMenuOpen ? 'hidden' : ''} ${onDark && !mobileMenuOpen ? 'on-dark' : ''}`}
+      >
+        <div className="bar">
+          <Link href="/" className="logo" aria-label="BIOTOX by MedReg home">
+            <Image src="/images/logo-full.png" alt="BIOTOX by MedReg" width={158} height={57} preload className="logo-img" id="headerLogo" />
           </Link>
 
-          <nav className="main-nav" aria-label="Main Navigation">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={isActive ? 'active' : ''}
-                >
-                  {link.label}
+          <nav className="main-nav" aria-label="Main navigation">
+            <ul>
+              <li className="has-mega">
+                <Link href="/expertise" className={isActive('/expertise') ? 'active' : ''} aria-haspopup="true">
+                  Services <Icon name="chevron" className="caret" />
                 </Link>
-              );
-            })}
+                <div className="mega" role="menu">
+                  <div className="mega-list">
+                    {services.map((s) => (
+                      <Link key={s.slug} href={serviceHref(s.slug)} role="menuitem">
+                        <span className="icon-box"><Icon name={s.icon} /></span>
+                        <span>
+                          <strong>{s.title}</strong>
+                          <small>{s.tag}</small>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link href="/process" className="mega-feature">
+                    <Image src="https://images.pexels.com/photos/7550538/pexels-photo-7550538.jpeg?auto=compress&cs=tinysrgb&w=800" alt="" fill sizes="320px" />
+                    <span className="tag">ISO 10993-1:2025</span>
+                    <h4>BEP + BER, end to end</h4>
+                    <p>From biological evaluation plan to a regulator-ready report.</p>
+                    <span className="link-arrow" style={{ color: '#5EEAD4' }}>See the process <Icon name="arrow" /></span>
+                  </Link>
+                </div>
+              </li>
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={isActive(link.href) ? 'active' : ''}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
-
-          <a
-            href="https://www.medreg.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="medreg-partner-logo"
-            aria-label="Visit MedReg website"
-          >
-            <Image
-              src="/images/medreg-logo.png"
-              alt="MedReg"
-              width={110}
-              height={32}
-              className="medreg-logo-light"
-            />
-            <Image
-              src="/images/medreg-logo-dark.png"
-              alt="MedReg"
-              width={110}
-              height={32}
-              className="medreg-logo-dark"
-            />
-          </a>
 
           <div className="header-actions">
             <ThemeToggle />
             <Link href="/contact" className="btn btn-primary btn-sm">
-              Enquire Now →
+              Enquire Now <Icon name="arrow" />
             </Link>
             <button
               className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}
-              id="hamburger"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-controls="mobileNav"
+              onClick={() => setMobileMenuOpen((o) => !o)}
             >
               <span />
               <span />
@@ -107,25 +120,31 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile drawer navigation */}
-      <div className={`mobile-nav ${mobileMenuOpen ? 'open' : ''}`} id="mobileNav">
-        {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            onClick={() => setMobileMenuOpen(false)}
-          >
+      <div className={`mobile-nav ${mobileMenuOpen ? 'open' : ''}`} id="mobileNav" data-lenis-prevent aria-hidden={!mobileMenuOpen}>
+        <Link href="/" style={{ transitionDelay: '80ms' }}>Home</Link>
+        <details>
+          <summary style={{ transitionDelay: '130ms' }}>
+            Services <Icon name="chevron" />
+          </summary>
+          <div className="sub">
+            <Link href="/expertise">All services</Link>
+            {services.map((s) => (
+              <Link key={s.slug} href={serviceHref(s.slug)}>{s.title}</Link>
+            ))}
+          </div>
+        </details>
+        {navLinks.map((link, i) => (
+          <Link key={link.href} href={link.href} style={{ transitionDelay: `${180 + i * 50}ms` }}>
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/contact"
-          onClick={() => setMobileMenuOpen(false)}
-          className="btn btn-primary"
-          style={{ marginTop: '16px', display: 'inline-block', textAlign: 'center' }}
-        >
-          Enquire Now →
+        <Link href="/contact" className="btn btn-primary">
+          Enquire Now <Icon name="arrow" />
         </Link>
+        <div className="mobile-nav-contact">
+          <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
+          <a href={`tel:${siteConfig.contact.phonePrimaryRaw}`}>{siteConfig.contact.phonePrimary}</a>
+        </div>
       </div>
     </>
   );

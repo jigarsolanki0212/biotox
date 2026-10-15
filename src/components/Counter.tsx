@@ -6,42 +6,40 @@ interface CounterProps {
   target: number;
   suffix?: string;
   className?: string;
+  duration?: number;
 }
 
-export default function Counter({ target, suffix = '', className = '' }: CounterProps) {
-  const [count, setCount] = useState(0);
+/** Counts up with an ease-out curve the first time it scrolls into view. */
+export default function Counter({ target, suffix = '', className = '', duration = 1800 }: CounterProps) {
+  const [count, setCount] = useState(target);
   const ref = useRef<HTMLSpanElement>(null);
-  const animatedRef = useRef(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setCount(0);
+    let raf = 0;
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !animatedRef.current) {
-            animatedRef.current = true;
-            let cur = 0;
-            const step = Math.max(1, Math.round(target / 40));
-            const timer = setInterval(() => {
-              cur += step;
-              if (cur >= target) {
-                cur = target;
-                clearInterval(timer);
-              }
-              setCount(cur);
-            }, 30);
-            observer.unobserve(el);
-          }
-        });
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          setCount(Math.round(target * (1 - Math.pow(1 - t, 4))));
+          if (t < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
       },
-      { threshold: 0.3 }
+      { threshold: 0.4 }
     );
-
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [target]);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [target, duration]);
 
   return (
     <span ref={ref} className={className}>

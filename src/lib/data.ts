@@ -1,4 +1,5 @@
 export interface ServiceItem {
+  slug: string;
   icon: string;
   tag: string;
   title: string;
@@ -41,6 +42,7 @@ export interface FaqItem {
 
 export const services: ServiceItem[] = [
   {
+    slug: 'biocompatibility-evaluation',
     icon: 'flask',
     tag: 'ISO 10993-1:2025',
     title: 'Biocompatibility Evaluation',
@@ -48,6 +50,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.unsplash.com/photo-1748261348213-62f4c399bb72?auto=format&fit=crop&w=800&q=80',
   },
   {
+    slug: 'bep-ber-preparation',
     icon: 'document',
     tag: 'Regulatory Compliance',
     title: 'BEP / BER Preparation & Review',
@@ -55,6 +58,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/8730987/pexels-photo-8730987.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'toxicological-risk-assessment',
     icon: 'target',
     tag: 'TRA · PDE',
     title: 'Toxicological Risk Assessment',
@@ -62,6 +66,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/7567486/pexels-photo-7567486.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'in-silico-safety-assessment',
     icon: 'cpu',
     tag: 'No Animal Testing',
     title: 'In-silico Safety Assessment',
@@ -69,6 +74,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/34804005/pexels-photo-34804005.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'qsar-analysis',
     icon: 'molecule',
     tag: 'E&L · Impurities',
     title: 'QSAR Analysis',
@@ -76,6 +82,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/8325713/pexels-photo-8325713.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'genotoxicity-prediction',
     icon: 'dna',
     tag: 'Without Testing',
     title: 'Genotoxicity Prediction',
@@ -83,6 +90,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/8540595/pexels-photo-8540595.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'global-regulatory-compliance',
     icon: 'globe',
     tag: 'Multi-Market',
     title: 'Global Regulatory Compliance',
@@ -90,6 +98,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/8828607/pexels-photo-8828607.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'risk-management-iso-14971',
     icon: 'shield',
     tag: 'ISO 14971',
     title: 'Risk Assessment & Management',
@@ -97,6 +106,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/8413288/pexels-photo-8413288.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'iso-18562-breathing-gas-pathway',
     icon: 'lungs',
     tag: 'Active Devices',
     title: 'ISO 18562-1:2024 Compliance',
@@ -104,6 +114,7 @@ export const services: ServiceItem[] = [
     img: 'https://images.pexels.com/photos/4416539/pexels-photo-4416539.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
+    slug: 'iso-7405-dental-devices',
     icon: 'tooth',
     tag: 'Dental · Oral',
     title: 'ISO 7405:2025 Compliance',

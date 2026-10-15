@@ -1,17 +1,19 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Link from 'next/link';
 import ContactSection from '@/components/ContactSection';
 import JsonLd from '@/components/JsonLd';
-import { services, ICONS } from '@/lib/data';
+import PageHero from '@/components/PageHero';
+import ServiceCard from '@/components/ServiceCard';
+import CtaBand from '@/components/CtaBand';
+import Icon from '@/components/Icon';
+import { services } from '@/lib/data';
 import { siteConfig, getBreadcrumbSchema, getServiceSchema } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
-  title: 'Our Expertise — Medical Device Toxicology',
+  title: 'Our Expertise — Medical Device Toxicology Services',
   description:
-    'Smarter toxicology for better regulatory decisions — covering biocompatibility evaluation, BEP/BER, TRA, QSAR, in-silico safety, and ISO 10993 compliance.',
-  alternates: {
-    canonical: `${siteConfig.url}/expertise`,
-  },
+    'Smarter toxicology for better regulatory decisions — covering biocompatibility evaluation, BEP/BER, TRA, QSAR, in-silico safety, ISO 18562, ISO 7405 and ISO 10993 compliance.',
+  alternates: { canonical: `${siteConfig.url}/expertise` },
   openGraph: {
     title: 'Our Expertise — BIOTOX by MedReg',
     description:
@@ -22,68 +24,37 @@ export const metadata: Metadata = {
 };
 
 export default function ExpertisePage() {
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', item: '/' },
-    { name: 'Expertise', item: '/expertise' },
-  ]);
-  const serviceSchema = getServiceSchema(services);
-
   return (
     <>
-      <JsonLd schema={breadcrumbSchema} />
-      <JsonLd schema={serviceSchema} />
+      <JsonLd schema={getBreadcrumbSchema([{ name: 'Home', item: '/' }, { name: 'Expertise', item: '/expertise' }])} />
+      <JsonLd schema={getServiceSchema(services)} />
+
+      <PageHero
+        eyebrow="Core Services"
+        title={<>Our <em>Expertise</em></>}
+        lead="Smarter toxicology for better regulatory decisions — covering the full spectrum of biological safety for medical devices from concept to market approval."
+        img="https://images.unsplash.com/photo-1748261348213-62f4c399bb72?auto=format&fit=crop&w=1800&q=75"
+        crumbs={[{ name: 'Expertise' }]}
+        chips={['ISO 10993-1:2025', 'BEP / BER', 'TRA · QSAR', 'ISO 18562', 'ISO 7405']}
+      />
 
       <section className="section" id="expertise">
-        <div className="blob-wrap" aria-hidden="true">
-          <div className="blob blob-blue" style={{ width: '420px', height: '420px', top: '-140px', left: '-140px' }} />
-          <div className="blob blob-purple" style={{ width: '380px', height: '380px', bottom: '-120px', right: '-120px' }} />
-        </div>
-
         <div className="container">
-          <div className="section-head center reveal in">
-            <div className="eyebrow" style={{ justifyContent: 'center', width: '100%' }}>
-              Core Services
-            </div>
-            <h1>
-              Our <em>Expertise</em>
-            </h1>
-            <p>
-              Smarter toxicology for better regulatory decisions — covering the full spectrum of biological safety for medical devices from concept to market approval.
-            </p>
-          </div>
-
-          <div className="grid grid-3" id="servicesGrid">
+          <div className="grid grid-3">
             {services.map((item, idx) => (
-              <div key={idx} className="card reveal in">
-                <div className="card-img-wrap">
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    width={400}
-                    height={220}
-                    className="card-img"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="card-body">
-                  <div className="card-meta">
-                    <span
-                      className="icon-box"
-                      dangerouslySetInnerHTML={{
-                        __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${ICONS[item.icon] || ICONS.flask}</svg>`,
-                      }}
-                    />
-                    <span className="tag">{item.tag}</span>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              </div>
+              <ServiceCard key={item.slug} item={item} index={idx} />
             ))}
           </div>
+          <p style={{ textAlign: 'center', marginTop: 48, color: 'var(--text-muted)' }} data-reveal="up">
+            Not sure which service you need?{' '}
+            <Link href="/contact" className="link-arrow" style={{ display: 'inline-flex' }}>
+              Ask a toxicologist <Icon name="arrow" />
+            </Link>
+          </p>
         </div>
       </section>
 
+      <CtaBand />
       <ContactSection />
     </>
   );
