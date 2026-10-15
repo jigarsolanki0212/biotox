@@ -78,7 +78,7 @@ export default function Footer() {
           <nav aria-label="Legal">
             <Link href="/privacy-policy">Privacy Policy</Link>
             <Link href="/terms">Terms of Use</Link>
-            <Link href="/sitemap.xml">Sitemap</Link>
+            <a href="/sitemap.xml">Sitemap</a>
           </nav>
         </div>
       </div>
