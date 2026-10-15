@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'BIOTOX by MedReg — Expert Toxicology',
     description: siteConfig.description,
-    url: siteConfig.url,
+    url: siteConfig.shareUrl,
     siteName: siteConfig.name,
     images: [
       {

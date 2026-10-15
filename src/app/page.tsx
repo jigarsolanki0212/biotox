@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'BIOTOX by MedReg — Expert Toxicology',
     description:
       'Expert toxicology and biological safety evaluation for medical devices — biocompatibility, BEP/BER, risk assessment, and global regulatory compliance.',
-    url: siteConfig.url,
+    url: siteConfig.shareUrl,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BIOTOX by MedReg' }],
   },
 };

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Privacy Policy — BIOTOX by MedReg',
     description: metaDescription,
-    url: `${siteConfig.url}/privacy-policy`,
+    url: `${siteConfig.shareUrl}/privacy-policy`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BIOTOX by MedReg' }],
   },
 };

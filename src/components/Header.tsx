@@ -25,6 +25,13 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // The Services menu opens on hover / focus. After a link in it is clicked it is held shut until the pointer
+  // leaves, otherwise it stays open over the new page (the pointer is still on it and the link keeps focus).
+  const [megaClosed, setMegaClosed] = useState(false);
+  const closeMega = () => {
+    setMegaClosed(true);
+    (document.activeElement as HTMLElement | null)?.blur();
+  };
   const pathname = usePathname();
   const lastY = useRef(0);
 
@@ -89,11 +96,11 @@ export default function Header() {
 
           <nav className="main-nav" aria-label="Main navigation">
             <ul>
-              <li className="has-mega">
-                <Link href="/expertise" className={isActive('/expertise') ? 'active' : ''} aria-haspopup="true">
+              <li className={`has-mega ${megaClosed ? 'mega-closed' : ''}`} onMouseLeave={() => setMegaClosed(false)}>
+                <Link href="/expertise" className={isActive('/expertise') ? 'active' : ''} aria-haspopup="true" onClick={closeMega}>
                   Services <Icon name="chevron" className="caret" />
                 </Link>
-                <div className="mega" role="menu">
+                <div className="mega" role="menu" onClick={(e) => (e.target as HTMLElement).closest('a') && closeMega()}>
                   <div className="mega-list">
                     {services.map((s) => (
                       <Link key={s.slug} href={serviceHref(s.slug)} role="menuitem">

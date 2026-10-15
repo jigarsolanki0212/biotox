@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: 'Contact Us — BIOTOX by MedReg',
     description:
       'Direct expert assistance for medical device biocompatibility, BEP/BER, and regulatory submissions. Response within 2 hours.',
-    url: `${siteConfig.url}/contact`,
+    url: `${siteConfig.shareUrl}/contact`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'Contact BIOTOX by MedReg' }],
   },
 };

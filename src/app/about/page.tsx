@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'About BIOTOX by MedReg',
     description: 'Expert toxicology solutions for safe, compliant, successful medical devices.',
-    url: `${siteConfig.url}/about`,
+    url: `${siteConfig.shareUrl}/about`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'About BIOTOX by MedReg' }],
   },
 };

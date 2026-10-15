@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: 'BEP + BER Process — BIOTOX by MedReg',
     description:
       'End-to-end biological safety compliance per ISO 10993-1:2025: Biological Evaluation Plan (BEP) & Biological Evaluation Report (BER).',
-    url: `${siteConfig.url}/process`,
+    url: `${siteConfig.shareUrl}/process`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BEP BER Process' }],
   },
 };

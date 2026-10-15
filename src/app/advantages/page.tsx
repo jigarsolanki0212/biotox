@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: 'Why Us — BIOTOX by MedReg',
     description:
       'DABT & ERT certified toxicologists, faster regulatory approvals, multi-market compliance (FDA, EU MDR, CDSCO), and minimized testing costs.',
-    url: `${siteConfig.url}/advantages`,
+    url: `${siteConfig.shareUrl}/advantages`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'Why Us BIOTOX' }],
   },
 };

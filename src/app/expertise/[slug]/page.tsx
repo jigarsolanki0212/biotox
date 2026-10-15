@@ -35,8 +35,9 @@ export async function generateMetadata({ params }: PageProps<'/expertise/[slug]'
     openGraph: {
       title: `${s.title} — BIOTOX by MedReg`,
       description,
-      url,
-      images: [{ url: s.img.replace('w=800', 'w=1200'), width: 1200, height: 630, alt: s.title }],
+      url: url.replace(siteConfig.url, siteConfig.shareUrl),
+      // the brand card: the service photos are stock images and render poorly cropped in link previews
+      images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: `${s.title} — BIOTOX by MedReg` }],
     },
   };
 }

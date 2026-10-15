@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: 'Our Expertise — BIOTOX by MedReg',
     description:
       'Smarter toxicology for better regulatory decisions — biocompatibility evaluation, BEP/BER, toxicological risk assessment, and ISO 10993 compliance.',
-    url: `${siteConfig.url}/expertise`,
+    url: `${siteConfig.shareUrl}/expertise`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'BIOTOX Expertise' }],
   },
 };

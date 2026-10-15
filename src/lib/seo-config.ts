@@ -2,7 +2,18 @@ export const siteConfig = {
   name: "BIOTOX by MedReg",
   shortName: "BIOTOX",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://medregbiotox.com",
-  ogImage: "https://medregbiotox.com/images/og-image.png",
+  /**
+   * Address used in link previews (WhatsApp, LinkedIn, Facebook, X). It must be the host actually serving this site:
+   * medregbiotox.com still points to the old site, so previews used to fetch a missing image from there. On Vercel
+   * this is the project's production domain, which becomes medregbiotox.com by itself once that domain is attached.
+   */
+  shareUrl: (process.env.NEXT_PUBLIC_SHARE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "") ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://medregbiotox.com").replace(/\/$/, ""),
+  get ogImage() {
+    return `${this.shareUrl}/images/og-image.png`;
+  },
   description:
     "Expert toxicology and biological safety evaluation for medical devices — biocompatibility, BEP/BER, risk assessment, and global regulatory compliance.",
   keywords: [

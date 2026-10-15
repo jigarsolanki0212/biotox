@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: 'Standards & Accreditations — BIOTOX by MedReg',
     description:
       'Regulatory compliance aligning with ISO 10993-1:2025, US FDA, EU MDR 2017/745, OECD GLP, ISO 17025, and NABL.',
-    url: `${siteConfig.url}/standards`,
+    url: `${siteConfig.shareUrl}/standards`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'Regulatory Standards & Accreditations' }],
   },
 };

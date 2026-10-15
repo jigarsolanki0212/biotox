@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: 'Medical Device Types We Cover — BIOTOX by MedReg',
     description:
       'Biocompatibility testing & biological safety evaluation for Orthopaedic Implants, Cardiovascular, IVD, Dental, Catheters, and Respiratory Devices.',
-    url: `${siteConfig.url}/devices`,
+    url: `${siteConfig.shareUrl}/devices`,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: 'Medical Devices Covered' }],
   },
 };
