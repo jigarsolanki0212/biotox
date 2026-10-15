@@ -61,25 +61,50 @@ async function sendWebhook(subject: string, fields: [string, string][]) {
   return true;
 }
 
+const MAX_BODY_BYTES = 16 * 1024;
+const MIN_FILL_MS = 3000;
+const invalid = (status: number) => NextResponse.json({ success: false, message: 'Invalid request.' }, { status });
+const fakeSuccess = () => NextResponse.json({ success: true, message: 'Thank you! We have received your enquiry.' });
+
+/** Browsers always send Origin on a cross-site POST; only our own pages may submit (blocks other sites posting spam). */
+function sameOrigin(request: Request) {
+  const origin = request.headers.get('origin');
+  if (!origin) return true; // server-to-server tools send none; the other checks still apply
+  try {
+    return new URL(origin).host === (request.headers.get('x-forwarded-host') || request.headers.get('host'));
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
+  if (!sameOrigin(request)) return invalid(403);
+  if (!(request.headers.get('content-type') || '').toLowerCase().startsWith('application/json')) return invalid(415);
+  if (Number(request.headers.get('content-length') || 0) > MAX_BODY_BYTES) return invalid(413);
+
   let data: Record<string, unknown>;
   try {
-    data = await request.json();
+    const raw = await request.text();
+    if (raw.length > MAX_BODY_BYTES) return invalid(413);
+    data = JSON.parse(raw);
   } catch {
-    return NextResponse.json({ success: false, message: 'Invalid request.' }, { status: 400 });
+    return invalid(400);
   }
-  if (!data || typeof data !== 'object') {
-    return NextResponse.json({ success: false, message: 'Invalid request.' }, { status: 400 });
-  }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return invalid(400);
 
   try {
-    // Honeypot: real visitors never fill the hidden "website" field.
-    if (data.website) {
-      return NextResponse.json({ success: true, message: 'Thank you! We have received your enquiry.' });
-    }
+    // Bot traps, answered with a fake success so bots learn nothing:
+    // a hidden "website" field real visitors never fill, and forms submitted faster than a person can type.
+    if (data.website) return fakeSuccess();
+    if (typeof data.elapsedMs === 'number' && data.elapsedMs < MIN_FILL_MS) return fakeSuccess();
 
     // Only plain strings count; anything else (objects, numbers) is treated as missing.
-    const str = (k: keyof typeof ENQUIRY_LIMITS) => (typeof data[k] === 'string' ? (data[k] as string).trim().slice(0, ENQUIRY_LIMITS[k]) : '');
+    // Plain strings only, control characters removed (newlines kept in the message), trimmed and length-capped.
+    const str = (k: keyof typeof ENQUIRY_LIMITS) => {
+      if (typeof data[k] !== 'string') return '';
+      const v = (data[k] as string).replace(k === 'message' ? /[\u0000-\u0009\u000B\u000C\u000E-\u001F\u007F]/g : /[\u0000-\u001F\u007F]/g, ' ');
+      return v.trim().slice(0, ENQUIRY_LIMITS[k]);
+    };
     const fullName = str('fullName');
     const emailAddress = str('emailAddress');
     const phoneNumber = str('phoneNumber');

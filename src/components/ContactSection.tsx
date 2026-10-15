@@ -36,6 +36,8 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [invalidField, setInvalidField] = useState<EnquiryField | null>(null);
+  // When the form appeared; the server treats instant submissions as bots.
+  const [shownAt] = useState(() => Date.now());
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
@@ -94,7 +96,7 @@ export default function ContactSection({ id = 'contact-cta-section', defaultServ
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify(trimmed),
+        body: JSON.stringify({ ...trimmed, elapsedMs: Date.now() - shownAt }),
       });
 
       const data = await res.json().catch(() => ({}));
