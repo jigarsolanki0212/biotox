@@ -49,6 +49,10 @@
 - [Device categories](https://medregbiotox.com/devices)
 - [Standards](https://medregbiotox.com/standards)
 - [Contact](https://medregbiotox.com/contact)
+- [Insights: guides from our toxicologists](https://medregbiotox.com/insights)
+- [BEP vs BER: the Biological Evaluation Plan and Report explained](https://medregbiotox.com/insights/bep-vs-ber-biological-evaluation-plan-report)
+- [Can you reduce biocompatibility testing? Chemical characterisation and risk assessment](https://medregbiotox.com/insights/reduce-biocompatibility-testing-chemical-characterisation)
+- [How medical devices are categorised under ISO 10993-1](https://medregbiotox.com/insights/iso-10993-1-device-categorisation)
 
 ## Frequently Asked Questions (FAQ)
 ### Q: What is a Biological Evaluation Plan (BEP)?

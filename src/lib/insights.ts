@@ -34,7 +34,7 @@ export const insights: Insight[] = [
     readMinutes: 5,
     tags: ['BEP / BER', 'ISO 10993-1'],
     img: 'https://images.pexels.com/photos/7550538/pexels-photo-7550538.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    published: false,
+    published: true,
     reviewNotes: ['Confirm the BEP/BER contents list matches how BIOTOX structures its documents.'],
     body: [
       { p: 'Every medical device that contacts the body needs a documented biological evaluation. Under ISO 10993-1 that evaluation is a planned, risk-based process, and it is usually captured in two documents: a Biological Evaluation Plan (BEP) written before any testing, and a Biological Evaluation Report (BER) written once the evidence is in.' },
@@ -82,7 +82,7 @@ export const insights: Insight[] = [
     readMinutes: 6,
     tags: ['Toxicological Risk Assessment', 'ISO 10993-17', 'ISO 10993-18'],
     img: 'https://images.pexels.com/photos/7651804/pexels-photo-7651804.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    published: false,
+    published: true,
     reviewNotes: ['Confirm wording on which endpoints can typically be addressed by chemistry and risk assessment.'],
     body: [
       { p: 'Biocompatibility testing used to mean running a fixed list of biological tests. Today ISO 10993-1 asks for a risk-based evaluation instead, and that opens the door to answering some biological questions with chemistry and toxicology rather than animal studies.' },
@@ -120,7 +120,7 @@ export const insights: Insight[] = [
     readMinutes: 5,
     tags: ['ISO 10993-1', 'Biocompatibility'],
     img: 'https://images.pexels.com/photos/8442366/pexels-photo-8442366.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    published: false,
+    published: true,
     reviewNotes: [
       'Check contact categories and duration bands against the current ISO 10993-1:2025 wording and update terminology if it changed.',
     ],
