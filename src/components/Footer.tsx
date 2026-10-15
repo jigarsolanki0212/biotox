@@ -12,7 +12,10 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container">
         <div className="footer-top">
-          <h2>Let&apos;s decode the regulations together.</h2>
+          <div>
+            <h2>Prove your device is biologically safe.</h2>
+            <p>Share your device and markets; a certified toxicologist replies within 2 hours on business days.</p>
+          </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Link href="/contact" className="btn btn-primary">
               Start a project <Icon name="arrow" />

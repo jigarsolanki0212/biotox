@@ -75,14 +75,14 @@ export default function HomePage() {
                 Get in Touch <Icon name="arrow" />
               </Link>
               <Link href="/expertise" className="btn btn-ghost">
-                Explore Services
+                View Our Expertise
               </Link>
             </div>
             <div className="hero-trust fade-up" style={{ ['--d' as string]: '480ms' }}>
               <div className="avatars" aria-hidden="true">
-                <span style={{ background: '#1548AB' }}>DABT</span>
+                <span style={{ background: '#07504C' }}>DABT</span>
                 <span style={{ background: '#017C77' }}>ERT</span>
-                <span style={{ background: '#2563EB' }}>UKRT</span>
+                <span style={{ background: '#0E7490' }}>UKRT</span>
               </div>
               <p>
                 <strong>Certified toxicologists</strong>
@@ -147,7 +147,7 @@ export default function HomePage() {
           <div data-reveal="right">
             <div className="eyebrow">About BIOTOX by MedReg</div>
             <h2 style={{ fontSize: 'clamp(30px,3.8vw,48px)', marginBottom: 18 }}>
-              Let&apos;s Decode The <span className="grad-text">Regulations</span> Together
+              Science-Led Safety for <span className="grad-text">Every Device</span> We Evaluate
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: 17 }}>
               Expert toxicology solutions for safe, compliant, successful products — smarter toxicology for better regulatory decisions, delivering comprehensive biological safety evaluation for medical devices worldwide.

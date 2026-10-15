@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins, Inter } from 'next/font/google';
+import { Space_Grotesk, Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -9,24 +9,31 @@ import PageTransition from '@/components/PageTransition';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig, getOrganizationSchema, getWebsiteSchema } from '@/lib/seo-config';
 
-const poppins = Poppins({
-  weight: ['500', '600', '700', '800'],
+// BIOTOX type: Space Grotesk headings, Geist text, Geist Mono labels (scientific feel, distinct from MedReg's Poppins/Montserrat).
+const spaceGrotesk = Space_Grotesk({
+  weight: ['500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-poppins',
+  variable: '--font-space-grotesk',
 });
 
-const inter = Inter({
-  weight: ['400', '500', '600', '700'],
+const geist = Geist({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-geist',
+});
+
+const geistMono = Geist_Mono({
+  weight: ['500'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-geist-mono',
 });
 
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#070D1C' },
+    { media: '(prefers-color-scheme: dark)', color: '#04110F' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -108,7 +115,7 @@ export default function RootLayout({
   const websiteSchema = getWebsiteSchema();
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${inter.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${geist.variable} ${geistMono.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{

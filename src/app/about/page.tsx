@@ -46,7 +46,7 @@ export default function AboutPage() {
 
       <PageHero
         eyebrow="About BIOTOX by MedReg"
-        title={<>Let&apos;s Decode The <em>Regulations</em> Together</>}
+        title={<>Science. Safety. <em>Compliance.</em></>}
         lead="Expert toxicology solutions for safe, compliant, successful products — smarter toxicology for better regulatory decisions, delivering comprehensive biological safety evaluation for medical devices worldwide."
         img={px(4031692, 1800)}
         crumbs={[{ name: 'About' }]}
